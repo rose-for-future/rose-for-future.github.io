@@ -97,6 +97,12 @@
     padding-left: 14px;
     border-left: 3px solid var(--accent);
   }
+  .article h3 {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 36px 0 14px;
+  }
 
   .article p { margin: 0 0 18px; }
   .article p strong, .article li strong { color: var(--text); font-weight: 700; }
@@ -327,7 +333,24 @@
     <li><strong>完成后自查</strong>：官方明确说过，更高努力等级下 Fable 5 会反思并验证自己的工作，“额外的思考会自我补偿”。一句自查要求，产出质量明显不同——它最被早期用户称道的特点，恰恰是擅长检查自己。</li>
   </ol>
 
-  <p>同样的结构，换个壳就是别的场景：把“三家竞品”换成“这 200 份用户访谈记录”，就是调研分析；换成“把这个想法推进到可交互原型并做一轮设计 QA”，配合 Claude Code 就是原型验证——这和我上一篇讲 Product Design 插件的逻辑是接续的：AI 在组织一段工作流，而不是生成一个结果。</p>
+  <p>同样的结构，换个壳就是别的场景：把“三家竞品”换成“这 200 份用户访谈记录”，就是调研分析；换成“把这个想法推进到可交互原型”，配合 Claude Code 就是原型验证——这和我上一篇讲 Product Design 插件的逻辑是接续的：AI 在组织一段工作流，而不是生成一个结果。</p>
+
+  <h3>原型验证这个壳，我自己实测了一把</h3>
+
+  <p>写到这里不想停留在纸面上，我用 Fable 5 + Claude Code 真跑了一个最不像“产品经理本职”的任务：<strong>做一个类 Minecraft 的网页小游戏，并发布到公网</strong>。</p>
+
+  <p>我的委托只有一句话级别的需求加几条验收标准：第一人称视角、可以挖方块和放方块、要有物品栏、性能不能卡、做完部署上线。剩下的全部是它自己完成的——</p>
+
+  <ul>
+    <li><strong>技术决策自己做</strong>：地形怎么程序化生成、碰撞检测怎么写，都没问过我。最让我意外的是它主动绕开了一个版本坑：Three.js 新版本移除了某个引入方式，它直接换用了稳定的旧版本，这种坑我这个不写代码的人根本不会知道；</li>
+    <li><strong>性能优化自己上</strong>：上万个方块没有逐个渲染，它用了按类型分组的实例化渲染，只画暴露在外的方块——这是我事后看代码注释才知道的；</li>
+    <li><strong>迭代闭环跑得通</strong>：我玩了几分钟，反馈“物品栏看不清是什么方块，也没有数量”。几分钟后新版本上线：挖方块库存 +1、放置消耗库存、数量实时显示。一次反馈，一次交付；</li>
+    <li><strong>部署也是它做的</strong>：建 GitHub 仓库、推代码、开 Pages、轮询验证上线，中途网络抖动它自己加重试扛过去了。</li>
+  </ul>
+
+  <p>成品在这里，你现在就可以玩：<a href="https://rose-for-future.github.io/voxel-world/" target="_blank" rel="noopener"><strong>体素世界 Voxel World</strong></a>（代码在 <a href="https://github.com/rose-for-future/voxel-world" target="_blank" rel="noopener">GitHub</a>）。</p>
+
+  <p>全程我没写一行代码。我做的事只有四件：提需求、玩、给反馈、拍板——你会发现这就是上面委托模板的四个零件：任务与背景、产出清单、过程反馈、验收标准。一个不写代码的产品经理，凭一套委托方法把一个“产品”从想法推到了可被任何人访问的上线状态。这件事三年前需要一个小团队，现在需要一个晚上。</p>
 
   <h2>四、再往深一层：把委托模板沉淀成资产</h2>
 
