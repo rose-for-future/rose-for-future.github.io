@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lixudong · AI 产品经理</title>
+<meta name="description" content="lixudong 的个人站：AI 产品经理，把工作方法沉淀成可复用的系统。">
+<style>
+  :root {
+    --bg: #0b0c0f;
+    --bg-elev: #13151a;
+    --bg-card: #15171d;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --text: #e8eaee;
+    --text-dim: #9ba1ad;
+    --text-faint: #6b7180;
+    --accent: #f5b342;
+    --accent-soft: rgba(245, 179, 66, 0.12);
+    --accent-line: rgba(245, 179, 66, 0.35);
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== 顶部导航 ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(11, 12, 15, 0.78);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+  }
+  .logo .dot { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  .nav-links a { transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a.active { color: var(--accent); }
+
+  /* ===== Hero ===== */
+  .hero {
+    padding: 110px 0 90px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 720px;
+    height: 420px;
+    background: radial-gradient(ellipse at center, rgba(245, 179, 66, 0.10) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    border-radius: 999px;
+    padding: 5px 14px;
+    margin-bottom: 26px;
+  }
+  .hero-tag::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-size: clamp(40px, 7vw, 64px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero p.slogan {
+    font-size: clamp(17px, 2.4vw, 20px);
+    color: var(--text-dim);
+    max-width: 560px;
+  }
+  .hero p.slogan strong { color: var(--text); font-weight: 600; }
+
+  /* ===== 通用 Section ===== */
+  section { padding: 64px 0; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .section-head h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .section-head .en {
+    font-size: 13px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* ===== 卡片 ===== */
+  .card {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: border-color 0.25s, transform 0.25s, background 0.25s;
+  }
+  a.card:hover {
+    border-color: var(--accent-line);
+    background: var(--bg-elev);
+    transform: translateY(-2px);
+  }
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+  }
+  .card-meta .sep { opacity: 0.5; }
+  .card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  a.card:hover h3 { color: var(--accent); }
+  .card p.desc {
+    font-size: 15px;
+    color: var(--text-dim);
+  }
+  .card .read-more {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--accent);
+  }
+
+  /* ===== 实验室 ===== */
+  .lab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--accent-line);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .badge.muted {
+    border-color: var(--border-strong);
+    color: var(--text-faint);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .card.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .lab-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    margin-bottom: 16px;
+  }
+  .card.disabled .lab-icon {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--border);
+    filter: grayscale(1);
+  }
+
+  /* ===== 页脚 ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    padding: 36px 0 48px;
+    font-size: 13px;
+    color: var(--text-faint);
+    display: flow-root;
+  }
+  footer .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    justify-content: space-between;
+  }
+  footer a { color: var(--text-dim); }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 72px 0 60px; }
+    section { padding: 44px 0; }
+    .lab-grid { grid-template-columns: 1fr; }
+    .nav-links { gap: 18px; }
+    .card { padding: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="index.html">lixudong<span class="dot">.</span></a>
+    <nav class="nav-links">
+      <a href="index.html" class="active">首页</a>
+      <a href="#articles">文章</a>
+      <a href="#lab">实验室</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="wrap">
+      <span class="hero-tag">AI 产品经理</span>
+      <h1>lixudong<span class="accent">_</span></h1>
+      <p class="slogan">执行越来越便宜的时代，我专注一件事：<strong>把工作方法沉淀成可复用的系统</strong>——让每一次实践都变成下一次的起点。</p>
+    </div>
+  </div>
+
+  <!-- 文章 -->
+  <section id="articles">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>文章</h2>
+        <span class="en">Writing</span>
+      </div>
+      <a class="card" href="article.html">
+        <div class="card-meta">
+          <span>2026-06-10</span>
+          <span class="sep">·</span>
+          <span>发布于 人人都是产品经理</span>
+        </div>
+        <h3>Fable 5 发布：AI 第一次能接管“以天计”的工作，产品经理该怎么接？</h3>
+        <p class="desc">Fable 5 真正值得关注的，不是又一次跑分刷新，而是 AI 第一次可以稳定接管“以天为单位”的完整工作流。会委托的人和只会提问的人，产出差距会迅速拉开——文末附一个可以直接抄走的委托模板。</p>
+        <span class="read-more">阅读全文 →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 实验室 -->
+  <section id="lab">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>实验室</h2>
+        <span class="en">Lab</span>
+      </div>
+      <div class="lab-grid">
+        <a class="card" href="https://rose-for-future.github.io/voxel-world/">
+          <div class="lab-icon">⛏️</div>
+          <div class="card-meta">
+            <span class="badge">可玩 Demo</span>
+          </div>
+          <h3>体素世界 Voxel World</h3>
+          <p class="desc">一个类 Minecraft 的网页小游戏：在浏览器里挖方块、搭建筑，体验从零手搓一个体素引擎。</p>
+          <span class="read-more">进入世界 →</span>
+        </a>
+        <div class="card disabled">
+          <div class="lab-icon">🎙️</div>
+          <div class="card-meta">
+            <span class="badge muted">建设中</span>
+          </div>
+          <h3>语音助手实验</h3>
+          <p class="desc">探索语音交互与工作流委托的结合：用一句话把一整天的任务交出去。敬请期待。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 lixudong · AI 产品经理</span>
+    <span>本站内容原创发布于 <a href="#" rel="noopener">人人都是产品经理</a>，未经许可禁止转载。</span>
+  </div>
+</footer>
+
+</body>
+</html>

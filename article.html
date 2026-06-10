@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fable 5 发布：AI 第一次能接管“以天计”的工作，产品经理该怎么接？ · lixudong</title>
+<meta name="description" content="Fable 5 真正值得产品经理关注的，不是又一次跑分刷新，而是 AI 第一次可以稳定地接管以天为单位的完整工作流。">
+<style>
+  :root {
+    --bg: #0b0c0f;
+    --bg-elev: #13151a;
+    --bg-card: #15171d;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --text: #e8eaee;
+    --text-dim: #9ba1ad;
+    --text-faint: #6b7180;
+    --accent: #f5b342;
+    --accent-soft: rgba(245, 179, 66, 0.12);
+    --accent-line: rgba(245, 179, 66, 0.35);
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ===== 顶部导航 ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(11, 12, 15, 0.78);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .logo { font-weight: 700; font-size: 17px; letter-spacing: 0.02em; }
+  .logo .dot { color: var(--accent); }
+  .back-link {
+    font-size: 14px;
+    color: var(--text-dim);
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  /* ===== 文章容器 ===== */
+  .article {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 64px 24px 80px;
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-faint);
+    margin-bottom: 20px;
+  }
+  .article-meta .sep { opacity: 0.5; }
+  .article-meta .author { color: var(--accent); }
+
+  .article h1 {
+    font-size: clamp(26px, 5vw, 34px);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    margin-bottom: 36px;
+  }
+
+  .article h2 {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 52px 0 18px;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .article p { margin: 0 0 18px; }
+  .article p strong, .article li strong { color: var(--text); font-weight: 700; }
+
+  .article ul, .article ol {
+    margin: 0 0 18px;
+    padding-left: 1.6em;
+    color: var(--text);
+  }
+  .article li { margin-bottom: 8px; }
+  .article li::marker { color: var(--accent); }
+
+  /* ===== 引用块 ===== */
+  .article blockquote {
+    margin: 0 0 18px;
+    padding: 18px 22px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    color: var(--text-dim);
+  }
+  .article blockquote p { margin-bottom: 14px; }
+  .article blockquote p:last-child,
+  .article blockquote ol:last-child { margin-bottom: 0; }
+  .article blockquote ol { margin-bottom: 14px; }
+  .article blockquote strong { color: var(--accent); }
+
+  /* ===== 表格 ===== */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 0 0 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .article table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    line-height: 1.6;
+    min-width: 560px;
+  }
+  .article th, .article td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .article th {
+    background: var(--bg-elev);
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .article tr:last-child td { border-bottom: none; }
+  .article tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
+  .article td strong { color: var(--accent); }
+
+  .footnote {
+    font-size: 14px;
+    color: var(--text-faint);
+  }
+
+  /* ===== 分隔线 ===== */
+  .article hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 44px 0;
+  }
+
+  /* ===== 文末信息 ===== */
+  .article .colophon {
+    font-size: 14px;
+    color: var(--text-faint);
+  }
+  .article .refs { font-size: 14.5px; color: var(--text-dim); }
+
+  /* ===== 页脚 ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 24px 48px;
+    font-size: 13px;
+    color: var(--text-faint);
+    text-align: center;
+  }
+  footer a { color: var(--text-dim); }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .article { padding: 44px 20px 64px; }
+    .article h2 { margin: 40px 0 16px; }
+    .article blockquote { padding: 16px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="index.html">lixudong<span class="dot">.</span></a>
+    <a class="back-link" href="index.html">← 返回首页</a>
+  </div>
+</header>
+
+<main class="article">
+
+  <div class="article-meta">
+    <span class="author">lixudong</span>
+    <span class="sep">·</span>
+    <span>2026-06-10</span>
+    <span class="sep">·</span>
+    <span>发布于 人人都是产品经理</span>
+  </div>
+
+  <h1>Fable 5 发布：AI 第一次能接管“以天计”的工作，产品经理该怎么接？</h1>
+
+  <blockquote>
+    <p>🔗 产品经理专业技能指的是：需求分析、数据分析、竞品分析、商业分析、行业分析、产品设计、版本管理、用户调研等。</p>
+  </blockquote>
+
+  <p><strong>Fable 5 真正值得产品经理关注的，不是又一次跑分刷新，而是 AI 第一次可以稳定地接管“以天为单位”的完整工作流。会委托的人和只会提问的人，产出差距会迅速拉开。</strong></p>
+
+  <p>2026 年 6 月 9 日，Anthropic 发布了 Claude Fable 5。这篇文章不复述新闻，只回答三个问题：它到底变强在哪、产品经理具体怎么用、以及怎么用才不浪费钱。文末有一个可以直接抄走的委托模板。</p>
+
+  <h2>一、三分钟搞清楚：Fable 5 是什么</h2>
+
+  <p>先校准概念，因为这次的命名容易绕晕人。</p>
+
+  <ul>
+    <li><strong>Mythos 级</strong>：Anthropic 对其最强一档模型能力的称呼，此前只有极少数合作伙伴接触过；</li>
+    <li><strong>Mythos 5</strong>：这一代的完整能力版本，仅向网络防御合作伙伴和经过审核的生物研究人员发放；</li>
+    <li><strong>Fable 5</strong>：同一个基础模型加上保守安全防护后的公开版本，人人可用。</li>
+  </ul>
+
+  <p>“Fable”来自拉丁文 fabula（被讲述之事），与希腊文 mythos 同源——同一个故事，不同的讲法。两者的差异只在防护：Fable 5 用分类器识别网络安全、生物化学、模型蒸馏三类高风险请求，命中后自动降级到 Opus 4.8 回答，而不是生硬拒绝。官方数据是 95% 以上的会话完全不受影响。</p>
+
+  <p>能力上只需要记住一个判断和一个故事。</p>
+
+  <p>判断：<strong>AI 能稳定承接的任务尺度，从“一次对话”变成了“以天计的项目”。</strong> 基准数字可以佐证——SWE-Bench Pro 80.3%（上一代 Opus 4.8 是 69.2%），第三方复杂分析任务基准首次突破 90%——但数字不是重点，时间尺度才是。</p>
+
+  <p>故事：Stripe 在一个 5000 万行的 Ruby 代码库里，让 Fable 5 用一天完成了原本需要整个团队干两个多月的全库迁移。它能做到，靠的不是“写代码更快”，而是自己规划阶段、拆分子任务、用笔记维持记忆、检查自己的产出。Anthropic 用游戏《杀戮尖塔》验证过这一点：给模型持久化的文件记忆后，Fable 5 通关到最终章的频率是 Opus 4.8 的三倍——长任务中保持目标不漂移，正是上一代模型最大的短板。</p>
+
+  <p>另外值得一提的是视觉能力：它可以只看截图就重建出网页应用的源代码，也能从图表里提取精确数值。竞品截图、数据看板，第一次可以被当作结构化输入来用。</p>
+
+  <h2>二、先想清楚：什么任务配得上它</h2>
+
+  <p>Fable 5 的定价是每百万输入 token 10 美元、输出 50 美元，是 Opus 4.8 的两倍（订阅用户 6 月 22 日前免费体验，之后消耗用量额度）。这个价格在传递一个明确信号：它不是用来“帮我润色这段话”的。</p>
+
+  <p>我的建议是按任务时长分层。判断标准很朴素：<strong>这件事如果交给一个靠谱的实习生，他需要干多久？</strong></p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>任务时长</th>
+          <th>典型任务</th>
+          <th>建议模型</th>
+          <th>单次成本量级*</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>5 分钟内</td>
+          <td>润色文案、翻译、单篇文档摘要</td>
+          <td>Haiku / Sonnet</td>
+          <td>几分钱到几毛钱</td>
+        </tr>
+        <tr>
+          <td>半小时～半天</td>
+          <td>写 PRD 初稿、单个竞品拆解、会议纪要转方案</td>
+          <td>Opus</td>
+          <td>几块钱</td>
+        </tr>
+        <tr>
+          <td>半天～数天</td>
+          <td>多竞品深度对比、行业研究报告、可交互原型从零到可评审、跨数百份文档的分析</td>
+          <td><strong>Fable 5</strong></td>
+          <td>几十到两百元</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="footnote">*成本为量级估算：以一次多竞品深度分析为例，输入（检索到的网页、文档、你的背景材料）约 100～300 万 token，输出约 5～10 万 token，对应 15～35 美元，约合人民币 100～250 元。听起来不便宜，但对照的是一个人两三天的工时。</p>
+
+  <p>反过来说，<strong>什么时候不该用它</strong>：</p>
+
+  <ul>
+    <li>任务五分钟能说清、一轮对话能完成的，用它纯属浪费，而且不会更好；</li>
+    <li>你自己还没想清楚目标和验收标准的——长任务最怕的不是模型跑不动，而是方向错了跑一晚上，第二天收获一份精致的废品；</li>
+    <li>涉及网络安全、生物化学等敏感领域的（会被降级到 Opus 4.8，体验上无感，但你拿到的不是 Fable 5 的回答）。</li>
+  </ul>
+
+  <h2>三、实践：一个可以直接抄走的委托案例</h2>
+
+  <p>光列场景没用，直接看一个完整例子。假设你是会员业务的产品经理，要做竞品会员体系的深度对比。</p>
+
+  <p><strong>问答思维的用法</strong>（大多数人的现状）：</p>
+
+  <blockquote>
+    <p>帮我分析一下竞品 A 的会员体系。</p>
+  </blockquote>
+
+  <p>你会得到一份看起来完整、但深度和你自己搜十分钟差不多的概述。然后你换个竞品再问一遍，最后自己手动拼表格。模型再强，这种用法也只能得到这种结果。</p>
+
+  <p><strong>委托思维的用法</strong>（Fable 5 的正确打开方式）：</p>
+
+  <blockquote>
+    <p><strong>任务</strong>：对比 A、B、C 三家产品的会员体系，产出一份可以直接进评审的分析报告。</p>
+    <p><strong>背景</strong>：我们是 XX 行业的 XX 产品，当前会员渗透率 X%，年付占比 X%，这次研究的目的是为 Q3 会员体系改版提供依据，重点关注年付转化。</p>
+    <p><strong>要求你完成</strong>：</p>
+    <ol>
+      <li>逐家拆解：定价结构（含所有档位和促销价）、权益设计（按高频/低频/情感型分类）、转化路径（从哪些入口、什么时机触发付费）；</li>
+      <li>检索每家最近 6 个月的改版动作和公开数据，标注信息来源和时间；</li>
+      <li>横向对比表一张：维度包括定价锚点、权益数量与结构、免费试用策略、挽留机制；</li>
+      <li>基于以上分析，给出对我们的 3 个可借鉴点和 2 个风险提示，每条都要说明推理依据，不要只给结论。</li>
+    </ol>
+    <p><strong>过程要求</strong>：把中间结论记入工作笔记，每完成一家输出一次阶段小结；信息找不到确切来源的，明确标注“推测”，不要混在事实里。</p>
+    <p><strong>完成后自查</strong>：对照上面 4 条产出要求逐条检查是否齐全；列出你在哪些判断上置信度低于 70%，以及补什么信息可以提高置信度。</p>
+  </blockquote>
+
+  <p>两段提示词的字数差了十倍，但产出物的差距是“一段概述”和“一份能进评审的报告”的差距。这个模板里有四个零件是通用的，换任何任务都成立：</p>
+
+  <ol>
+    <li><strong>任务 + 背景</strong>：不只说做什么，还说为什么做、服务什么决策——这决定它的分析往哪个方向收敛；</li>
+    <li><strong>产出清单</strong>：逐条列出交付物和格式，这是你的验收标准；</li>
+    <li><strong>过程要求</strong>：要求记笔记、分阶段小结、区分事实与推测——这是在主动利用它的长任务记忆能力，也方便你中途抽查；</li>
+    <li><strong>完成后自查</strong>：官方明确说过，更高努力等级下 Fable 5 会反思并验证自己的工作，“额外的思考会自我补偿”。一句自查要求，产出质量明显不同——它最被早期用户称道的特点，恰恰是擅长检查自己。</li>
+  </ol>
+
+  <p>同样的结构，换个壳就是别的场景：把“三家竞品”换成“这 200 份用户访谈记录”，就是调研分析；换成“把这个想法推进到可交互原型并做一轮设计 QA”，配合 Claude Code 就是原型验证——这和我上一篇讲 Product Design 插件的逻辑是接续的：AI 在组织一段工作流，而不是生成一个结果。</p>
+
+  <h2>四、再往深一层：把委托模板沉淀成资产</h2>
+
+  <p>如果你发现自己第三次粘贴同一个委托模板，就该把它沉淀下来了。</p>
+
+  <p>模型每半年换一代，但你的评审标准、验收清单、禁止事项不会过期。把上面那种委托模板写成可复用的 Skill 或文档——包含触发条件、操作步骤、判断标准、输出格式——让 AI 每次都按你的标准干活。执行越来越便宜的时代，<strong>“什么算好”的定义权，才是产品经理的护城河。</strong></p>
+
+  <p>这也是我对 Fable 5 这类长任务模型的真实判断：它放大的不是所有人的产能，而是那些已经把工作方法结构化的人的产能。方法混乱的人，只会得到更快的混乱。</p>
+
+  <h2>五、一个值得玩味的产品细节</h2>
+
+  <p>最后说一个发布中容易被忽略的细节。</p>
+
+  <p>Fable 5 发布的几天前，Anthropic 刚公开呼吁全球主要 AI 实验室建立“协调刹车机制”。然后他们发布了自己最强的公开模型——附带分类器降级、1000 多小时外部红队测试（没人找到通用越狱）、强制 30 天数据保留这一整套防护。</p>
+
+  <p>你可以把这理解为矛盾，我更愿意把它读成一种产品哲学：<strong>能力的发布速度，由防护的成熟度决定。</strong> Mythos 5 不是不发布，而是只发给能被信任的人；Fable 5 不是阉割版，而是“同一能力 + 公开环境所需的约束”。降级到 Opus 4.8 而不是直接拒绝，则是一个教科书级的体验决策。</p>
+
+  <p>对做 AI 产品的人，这是个现成的范本：当你的功能足够强时，分层开放、优雅降级、可审计的数据政策，本身就是产品设计的一部分，而不是法务部门的事后补丁。</p>
+
+  <h2>结语</h2>
+
+  <p>Fable 5 把 AI 能稳定承接的任务尺度，从“一次对话”推到了“以天计的项目”。</p>
+
+  <p>对产品经理来说，短期的分水岭在用法：同一个模型，问答思维得到一段概述，委托思维得到一份能进评审的报告。长期的分水岭在资产：当执行越来越便宜，产品经理的价值会进一步收敛到定义问题、设定标准、判断方向和验收结果上。</p>
+
+  <p>别只盯着模型能做什么，多想想你打算让它替你做什么——以及，你的验收标准写好了吗？</p>
+
+  <hr>
+
+  <p><strong>参考资料：</strong></p>
+
+  <ul class="refs">
+    <li>Anthropic 官方公告：Claude Fable 5 and Claude Mythos 5（anthropic.com/news/claude-fable-5-mythos-5）</li>
+    <li>TechCrunch：Anthropic's Claude Fable 5 is a version of Mythos the public can access today（2026-06-09）</li>
+    <li>The Decoder：Anthropic releases Claude Fable 5 and Mythos 5 with major gains in coding and science</li>
+    <li>VentureBeat：Anthropic brings Mythos to the masses with Claude Fable 5</li>
+  </ul>
+
+  <p class="colophon">本文由 @lixudong 原创发布于人人都是产品经理。未经作者许可，禁止转载。</p>
+
+  <p class="colophon">题图来自 Unsplash，基于 CC0 协议。</p>
+
+</main>
+
+<footer>
+  <a href="index.html">← 返回首页</a>
+  <span> · © 2026 lixudong</span>
+</footer>
+
+</body>
+</html>
