@@ -3,256 +3,865 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>lixudong · AI 产品经理</title>
-<meta name="description" content="lixudong 的个人站：AI 产品经理，把工作方法沉淀成可复用的系统。">
+<title>lixudong · AI 产品经理工作台</title>
+<meta name="description" content="lixudong 的个人站：AI 产品经理，把工作方法沉淀成可复用的系统、文章和实验。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23fff7e3'/%3E%3Crect x='1.5' y='1.5' width='29' height='29' rx='7' fill='none' stroke='%23d89422' stroke-opacity='.5'/%3E%3Ctext x='16' y='23' font-size='20' font-family='monospace' font-weight='700' fill='%23d89422' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rose-for-future.github.io/">
+<meta property="og:title" content="lixudong · AI 产品经理工作台">
+<meta property="og:description" content="把产品工作沉淀成可复用系统。AI 产品方法、文章，与可玩的 AI 实验。">
+<meta name="twitter:card" content="summary">
 <style>
   :root {
-    --bg: #0b0c0f;
-    --bg-elev: #13151a;
-    --bg-card: #15171d;
-    --border: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.14);
-    --text: #e8eaee;
-    --text-dim: #9ba1ad;
-    --text-faint: #6b7180;
-    --accent: #f5b342;
-    --accent-soft: rgba(245, 179, 66, 0.12);
-    --accent-line: rgba(245, 179, 66, 0.35);
-    --radius: 14px;
+    --bg: #f6faf8;
+    --bg-2: #eef6f4;
+    --panel: rgba(255, 255, 255, 0.72);
+    --panel-strong: #ffffff;
+    --line: rgba(18, 52, 49, 0.11);
+    --line-strong: rgba(18, 52, 49, 0.18);
+    --text: #102321;
+    --muted: #586a67;
+    --faint: #8b9996;
+    --gold: #d89422;
+    --cyan: #0da999;
+    --blue: #4579f5;
+    --red: #e96b62;
+    --radius: 18px;
+    --mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--bg);
+    min-height: 100vh;
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(13, 169, 153, 0.16), transparent 30%),
+      radial-gradient(circle at 76% 0%, rgba(216, 148, 34, 0.14), transparent 28%),
+      radial-gradient(circle at 52% 55%, rgba(69, 121, 245, 0.08), transparent 34%),
+      linear-gradient(145deg, var(--bg), var(--bg-2) 58%, #fbfdfb);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
     font-size: 16px;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
   }
 
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(120deg, transparent 0 44%, rgba(255, 255, 255, 0.74) 50%, transparent 56%),
+      repeating-linear-gradient(100deg, transparent 0 34px, rgba(13, 169, 153, 0.035) 35px, transparent 36px);
+    opacity: 0.5;
+    mask-image: linear-gradient(to bottom, black 0 46%, transparent 86%);
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 22% 22%, rgba(255, 255, 255, 0.92), transparent 38%),
+      radial-gradient(ellipse at 85% 42%, rgba(255, 247, 224, 0.68), transparent 32%),
+      linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.64));
+  }
+
   a { color: inherit; text-decoration: none; }
 
   .wrap {
-    max-width: 960px;
+    width: min(1120px, calc(100% - 40px));
     margin: 0 auto;
-    padding: 0 24px;
   }
 
-  /* ===== 顶部导航 ===== */
   header {
     position: sticky;
     top: 0;
     z-index: 50;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    background: rgba(11, 12, 15, 0.78);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--line);
+    background: rgba(246, 250, 248, 0.78);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
   }
+
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60px;
+    min-height: 64px;
   }
-  .logo {
-    font-weight: 700;
-    font-size: 17px;
-    letter-spacing: 0.02em;
-  }
-  .logo .dot { color: var(--accent); }
-  .nav-links {
-    display: flex;
-    gap: 28px;
-    font-size: 14px;
-    color: var(--text-dim);
-  }
-  .nav-links a { transition: color 0.2s; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-links a.active { color: var(--accent); }
 
-  /* ===== Hero ===== */
-  .hero {
-    padding: 110px 0 90px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: "";
-    position: absolute;
-    top: -180px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 720px;
-    height: 420px;
-    background: radial-gradient(ellipse at center, rgba(245, 179, 66, 0.10) 0%, transparent 65%);
-    pointer-events: none;
-  }
-  .hero-tag {
+  .logo {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--accent);
-    background: var(--accent-soft);
-    border: 1px solid var(--accent-line);
-    border-radius: 999px;
-    padding: 5px 14px;
-    margin-bottom: 26px;
-  }
-  .hero-tag::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-  .hero h1 {
-    font-size: clamp(40px, 7vw, 64px);
+    gap: 10px;
     font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    margin-bottom: 18px;
-  }
-  .hero h1 .accent { color: var(--accent); }
-  .hero p.slogan {
-    font-size: clamp(17px, 2.4vw, 20px);
-    color: var(--text-dim);
-    max-width: 560px;
-  }
-  .hero p.slogan strong { color: var(--text); font-weight: 600; }
-
-  /* ===== 通用 Section ===== */
-  section { padding: 64px 0; }
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-  .section-head h2 {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-  .section-head .en {
-    font-size: 13px;
-    color: var(--text-faint);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.01em;
   }
 
-  /* ===== 卡片 ===== */
-  .card {
-    display: block;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px;
-    transition: border-color 0.25s, transform 0.25s, background 0.25s;
+  .logo-mark {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(246, 180, 75, 0.45);
+    border-radius: 9px;
+    background: rgba(216, 148, 34, 0.12);
+    color: var(--gold);
+    font-family: var(--mono);
   }
-  a.card:hover {
-    border-color: var(--accent-line);
-    background: var(--bg-elev);
-    transform: translateY(-2px);
-  }
-  .card-meta {
+
+  .nav-links {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .nav-links a {
+    padding: 8px 12px;
+    border-radius: 999px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--text);
+    background: rgba(13, 169, 153, 0.08);
+  }
+
+  .hero {
+    min-height: calc(100vh - 64px);
+    display: grid;
+    align-items: center;
+    padding: 54px 0 42px;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+    gap: 42px;
+    align-items: center;
+  }
+
+  .hero .kicker,
+  .hero h1,
+  .hero .slogan,
+  .hero-actions {
+    opacity: 0;
+    transform: translateY(22px);
+    animation: bootIn 0.78s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .hero h1 { animation-delay: 0.14s; }
+  .hero .slogan { animation-delay: 0.28s; }
+  .hero-actions { animation-delay: 0.42s; }
+
+  @keyframes bootIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .kicker {
+    display: inline-flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 24px;
+    color: var(--cyan);
+    font-family: var(--mono);
     font-size: 13px;
-    color: var(--text-faint);
-    margin-bottom: 14px;
-  }
-  .card-meta .sep { opacity: 0.5; }
-  .card h3 {
-    font-size: 19px;
-    font-weight: 700;
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-  a.card:hover h3 { color: var(--accent); }
-  .card p.desc {
-    font-size: 15px;
-    color: var(--text-dim);
-  }
-  .card .read-more {
-    display: inline-block;
-    margin-top: 16px;
-    font-size: 14px;
-    color: var(--accent);
   }
 
-  /* ===== 实验室 ===== */
-  .lab-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+  .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 0 0 rgba(13, 169, 153, 0.36);
+    animation: pulse 2.2s infinite;
   }
-  .badge {
-    display: inline-block;
-    font-size: 12px;
-    padding: 3px 10px;
+
+  @keyframes pulse {
+    70% { box-shadow: 0 0 0 12px rgba(13, 169, 153, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(13, 169, 153, 0); }
+  }
+
+  h1 {
+    max-width: 650px;
+    font-size: clamp(44px, 7vw, 82px);
+    line-height: 0.98;
+    letter-spacing: 0;
+    font-weight: 900;
+  }
+
+  .headline-accent {
+    color: transparent;
+    background: linear-gradient(92deg, var(--gold), #e6b85a 38%, var(--cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .slogan {
+    max-width: 610px;
+    margin-top: 26px;
+    color: var(--muted);
+    font-size: clamp(17px, 2vw, 20px);
+  }
+
+  .slogan strong { color: var(--text); }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 34px;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--line-strong);
     border-radius: 999px;
-    border: 1px solid var(--accent-line);
-    color: var(--accent);
-    background: var(--accent-soft);
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 28px rgba(15, 45, 42, 0.08);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
   }
-  .badge.muted {
-    border-color: var(--border-strong);
-    color: var(--text-faint);
-    background: rgba(255, 255, 255, 0.04);
+
+  .button.primary {
+    border-color: rgba(216, 148, 34, 0.36);
+    background: rgba(255, 247, 227, 0.86);
+    color: #6a4307;
   }
-  .card.disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
+
+  .button:hover {
+    transform: translateY(-2px);
+    border-color: rgba(13, 169, 153, 0.42);
+    background: rgba(226, 249, 246, 0.88);
   }
-  .lab-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+
+  .terminal {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: 24px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.56) 58%),
+      rgba(255, 255, 255, 0.72);
+    box-shadow: 0 28px 80px rgba(15, 45, 42, 0.16);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+    animation: terminalBoot 0.88s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards;
+  }
+
+  .terminal::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(13, 169, 153, 0.16), transparent);
+    transform: translateX(-110%);
+    animation: scan 6s ease-in-out infinite;
+  }
+
+  .terminal::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: inset 0 0 44px rgba(13, 169, 153, 0.11);
+    opacity: 0.65;
+    animation: terminalGlow 3.4s ease-in-out infinite;
+  }
+
+  @keyframes terminalBoot {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes terminalGlow {
+    0%, 100% { opacity: 0.34; }
+    50% { opacity: 0.86; }
+  }
+
+  @keyframes scan {
+    0%, 28% { transform: translateX(-110%); }
+    58%, 100% { transform: translateX(110%); }
+  }
+
+  .terminal-top {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    background: var(--accent-soft);
-    border: 1px solid var(--accent-line);
-    margin-bottom: 16px;
-  }
-  .card.disabled .lab-icon {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: var(--border);
-    filter: grayscale(1);
+    justify-content: space-between;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--line);
+    color: #90a09d;
+    font-family: var(--mono);
+    font-size: 12px;
   }
 
-  /* ===== 页脚 ===== */
-  footer {
-    border-top: 1px solid var(--border);
-    margin-top: 40px;
-    padding: 36px 0 48px;
-    font-size: 13px;
-    color: var(--text-faint);
-    display: flow-root;
+  .terminal-top > span {
+    animation: fileBlink 2.8s ease-in-out infinite;
   }
+
+  @keyframes fileBlink {
+    0%, 100% { color: var(--faint); }
+    50% { color: rgba(16, 35, 33, 0.76); }
+  }
+
+  .traffic {
+    display: flex;
+    gap: 7px;
+  }
+
+  .traffic span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+
+  .traffic span:nth-child(1) { background: var(--red); }
+  .traffic span:nth-child(2) { background: var(--gold); }
+  .traffic span:nth-child(3) { background: var(--cyan); }
+
+  .terminal-body {
+    position: relative;
+    padding: 22px;
+  }
+
+  .prompt {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 18px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .prompt-line {
+    color: var(--muted);
+  }
+
+  .prompt-line strong {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .task-stack {
+    display: grid;
+    gap: 12px;
+  }
+
+  .task {
+    display: grid;
+    grid-template-columns: 30px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.64);
+    opacity: 0;
+    transform: translateX(22px);
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s, transform 0.3s, opacity 0.3s;
+    animation: taskIn 0.62s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .task:nth-child(1) { animation-delay: 0.66s; }
+  .task:nth-child(2) { animation-delay: 0.82s; }
+  .task:nth-child(3) { animation-delay: 0.98s; }
+
+  .task:hover,
+  .task.is-active {
+    border-color: rgba(13, 169, 153, 0.36);
+    background: rgba(235, 252, 249, 0.88);
+    box-shadow: 0 0 0 1px rgba(13, 169, 153, 0.08), 0 14px 44px rgba(15, 45, 42, 0.12);
+    transform: translateX(0) translateY(-1px);
+  }
+
+  @keyframes taskIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .task-index {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    color: var(--cyan);
+    background: rgba(13, 169, 153, 0.1);
+    font-family: var(--mono);
+    font-size: 12px;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+
+  .task.is-active .task-index {
+    color: #ffffff;
+    background: var(--cyan);
+    box-shadow: 0 0 24px rgba(13, 169, 153, 0.28);
+  }
+
+  .task h3 {
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .task p {
+    color: var(--faint);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .status {
+    color: var(--gold);
+    font-family: var(--mono);
+    font-size: 11px;
+    white-space: nowrap;
+    transition: color 0.3s, text-shadow 0.3s;
+  }
+
+  .task.is-active .status {
+    color: #9a640d;
+    text-shadow: 0 0 18px rgba(216, 148, 34, 0.24);
+  }
+
+  section {
+    padding: 74px 0;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1), transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 26px;
+  }
+
+  .section-head h2 {
+    font-size: clamp(26px, 4vw, 40px);
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+
+  .section-head p {
+    max-width: 460px;
+    color: var(--muted);
+  }
+
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.64);
+    box-shadow: 0 22px 70px rgba(15, 45, 42, 0.1);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .method-grid.is-visible .method {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .method-grid:hover .method {
+    opacity: 0.62;
+  }
+
+  .method {
+    min-height: 210px;
+    padding: 24px;
+    border-right: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.48s, transform 0.48s, background 0.28s, box-shadow 0.28s;
+  }
+
+  .method:nth-child(1) { transition-delay: 0.02s; }
+  .method:nth-child(2) { transition-delay: 0.12s; }
+  .method:nth-child(3) { transition-delay: 0.22s; }
+  .method:nth-child(4) { transition-delay: 0.32s; }
+
+  .method-grid .method:hover {
+    opacity: 1;
+    background: rgba(235, 252, 249, 0.86);
+    box-shadow: inset 0 2px 0 rgba(13, 169, 153, 0.46);
+    transition-delay: 0s;
+  }
+
+  .method:last-child { border-right: 0; }
+
+  .method code {
+    color: var(--cyan);
+    font-family: var(--mono);
+    font-size: 12px;
+    text-shadow: 0 0 16px rgba(13, 169, 153, 0.18);
+  }
+
+  .method h3 {
+    margin: 34px 0 10px;
+    font-size: 20px;
+  }
+
+  .method p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .writing-card {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    gap: 28px;
+    padding: 30px;
+    border: 1px solid rgba(246, 180, 75, 0.28);
+    border-radius: var(--radius);
+    background:
+      linear-gradient(135deg, rgba(255, 233, 181, 0.84), transparent 42%),
+      linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(238, 250, 248, 0.72));
+    box-shadow: 0 24px 76px rgba(79, 52, 7, 0.1);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.24s, border-color 0.24s, background 0.24s, box-shadow 0.24s;
+  }
+
+  .writing-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(246, 180, 75, 0.5);
+    background:
+      linear-gradient(135deg, rgba(255, 226, 157, 0.9), transparent 42%),
+      linear-gradient(160deg, rgba(255, 255, 255, 0.98), rgba(232, 249, 246, 0.78));
+    box-shadow: 0 28px 86px rgba(79, 52, 7, 0.14);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--faint);
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  .writing-card h3 {
+    max-width: 680px;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 1.28;
+    margin-bottom: 14px;
+  }
+
+  .writing-card p {
+    color: var(--muted);
+    max-width: 720px;
+  }
+
+  .read-more {
+    display: inline-flex;
+    margin-top: 22px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .article-gauge {
+    display: grid;
+    gap: 12px;
+    align-content: center;
+    border-left: 1px solid rgba(18, 52, 49, 0.12);
+    padding-left: 28px;
+  }
+
+  .gauge-number {
+    font-family: var(--mono);
+    font-size: 42px;
+    line-height: 1;
+    color: var(--cyan);
+  }
+
+  .gauge-label {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    display: inline-flex;
+    padding: 5px 9px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: #41605c;
+    background: rgba(255, 255, 255, 0.52);
+    font-size: 12px;
+  }
+
+  .lab-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 20px;
+  }
+
+  .lab-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 310px;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(237, 250, 248, 0.72));
+    box-shadow: 0 24px 76px rgba(15, 45, 42, 0.1);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.24s, border-color 0.24s, box-shadow 0.24s;
+  }
+
+  .lab-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+  }
+
+  a.lab-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(78, 215, 197, 0.44);
+    box-shadow: 0 32px 90px rgba(13, 169, 153, 0.16);
+  }
+
+  .lab-card:hover::before {
+    transform: translateX(120%);
+  }
+
+  .voxel-scene {
+    position: absolute;
+    right: 20px;
+    bottom: 18px;
+    width: 210px;
+    height: 170px;
+    transform: rotateX(58deg) rotateZ(42deg);
+    transform-style: preserve-3d;
+    opacity: 0.92;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  a.lab-card:hover .voxel-scene {
+    transform: rotateX(58deg) rotateZ(48deg) translateY(-8px) scale(1.04);
+  }
+
+  .cube {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    background: #4ed7c5;
+    border: 1px solid rgba(255,255,255,0.74);
+    box-shadow: 0 10px 24px rgba(15, 45, 42, 0.14);
+    animation: floatCube 3.4s ease-in-out infinite;
+  }
+
+  a.lab-card:hover .cube {
+    animation-duration: 1.55s;
+  }
+
+  .cube:nth-child(1) { left: 34px; top: 76px; background: #7aa2ff; animation-delay: -0.3s; }
+  .cube:nth-child(2) { left: 70px; top: 76px; background: #4ed7c5; animation-delay: -0.6s; }
+  .cube:nth-child(3) { left: 106px; top: 76px; background: #f6b44b; animation-delay: -0.9s; }
+  .cube:nth-child(4) { left: 70px; top: 40px; background: #f6b44b; animation-delay: -1.2s; }
+  .cube:nth-child(5) { left: 106px; top: 40px; background: #7aa2ff; animation-delay: -1.5s; }
+  .cube:nth-child(6) { left: 142px; top: 40px; background: #4ed7c5; animation-delay: -1.8s; }
+  .cube:nth-child(7) { left: 106px; top: 4px; background: #4ed7c5; animation-delay: -2.1s; }
+
+  @keyframes floatCube {
+    0%, 100% { transform: translateZ(0); filter: brightness(0.95); }
+    50% { transform: translateZ(18px); filter: brightness(1.16); }
+  }
+
+  .lab-content {
+    position: relative;
+    max-width: 430px;
+    z-index: 1;
+  }
+
+  .badge {
+    display: inline-flex;
+    margin-bottom: 18px;
+    padding: 5px 10px;
+    border: 1px solid rgba(78, 215, 197, 0.4);
+    border-radius: 999px;
+    color: var(--cyan);
+    background: rgba(226, 249, 246, 0.82);
+    font-size: 12px;
+  }
+
+  .lab-card h3 {
+    font-size: 28px;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .lab-card p {
+    color: var(--muted);
+  }
+
+  .wave {
+    position: absolute;
+    inset: auto 26px 32px 26px;
+    display: flex;
+    align-items: end;
+    gap: 9px;
+    height: 96px;
+  }
+
+  .wave span {
+    flex: 1;
+    min-width: 10px;
+    border-radius: 999px;
+    background: linear-gradient(to top, rgba(69, 121, 245, 0.24), rgba(216, 148, 34, 0.78));
+    animation: wave 1.4s ease-in-out infinite;
+  }
+
+  .wave span:nth-child(2n) { animation-delay: -0.35s; }
+  .wave span:nth-child(3n) { animation-delay: -0.7s; }
+
+  @keyframes wave {
+    0%, 100% { height: 24px; }
+    50% { height: 88px; }
+  }
+
+  .disabled {
+    opacity: 0.72;
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    margin-top: 54px;
+    padding: 34px 0 46px;
+    color: var(--faint);
+    font-size: 13px;
+  }
+
   footer .wrap {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 24px;
     justify-content: space-between;
+    gap: 12px 22px;
   }
-  footer a { color: var(--text-dim); }
-  footer a:hover { color: var(--accent); }
+
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--gold); }
+
+  @media (max-width: 900px) {
+    .hero {
+      min-height: auto;
+      padding: 64px 0 34px;
+    }
+    .hero-grid,
+    .writing-card,
+    .lab-grid {
+      grid-template-columns: 1fr;
+    }
+    .terminal { order: -1; }
+    .method-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .method:nth-child(2) { border-right: 0; }
+    .method:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+    .article-gauge {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+      padding-left: 0;
+      padding-top: 22px;
+    }
+  }
 
   @media (max-width: 640px) {
-    .hero { padding: 72px 0 60px; }
-    section { padding: 44px 0; }
-    .lab-grid { grid-template-columns: 1fr; }
-    .nav-links { gap: 18px; }
-    .card { padding: 22px; }
+    .wrap { width: min(100% - 28px, 1120px); }
+    .nav {
+      min-height: 58px;
+    }
+    .nav-links {
+      gap: 0;
+      font-size: 13px;
+    }
+    .nav-links a { padding: 7px 8px; }
+    .logo span:last-child { display: none; }
+    h1 { font-size: 44px; }
+    section { padding: 50px 0; }
+    .section-head {
+      display: block;
+    }
+    .section-head p { margin-top: 12px; }
+    .terminal-body,
+    .writing-card,
+    .lab-card,
+    .method {
+      padding: 20px;
+    }
+    .task {
+      grid-template-columns: 30px 1fr;
+    }
+    .status {
+      grid-column: 2;
+    }
+    .method-grid {
+      grid-template-columns: 1fr;
+    }
+    .method {
+      min-height: 180px;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .method:last-child { border-bottom: 0; }
+    .voxel-scene {
+      right: -10px;
+      bottom: 10px;
+      transform: scale(0.75) rotateX(58deg) rotateZ(42deg);
+      transform-origin: right bottom;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 </style>
 </head>
@@ -260,83 +869,218 @@
 
 <header>
   <div class="wrap nav">
-    <a class="logo" href="index.html">lixudong<span class="dot">.</span></a>
-    <nav class="nav-links">
-      <a href="index.html" class="active">首页</a>
-      <a href="#articles">文章</a>
+    <a class="logo" href="index.html" aria-label="返回首页">
+      <span class="logo-mark">L</span>
+      <span>lixudong</span>
+    </a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="index.html" class="active">工作台</a>
+      <a href="#methods">方法库</a>
+      <a href="#writing">文章</a>
       <a href="#lab">实验室</a>
     </nav>
   </div>
 </header>
 
 <main>
-
-  <!-- Hero -->
-  <div class="hero">
-    <div class="wrap">
-      <span class="hero-tag">AI 产品经理</span>
-      <h1>lixudong<span class="accent">_</span></h1>
-      <p class="slogan">执行越来越便宜的时代，我专注一件事：<strong>把工作方法沉淀成可复用的系统</strong>——让每一次实践都变成下一次的起点。</p>
-    </div>
-  </div>
-
-  <!-- 文章 -->
-  <section id="articles">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>文章</h2>
-        <span class="en">Writing</span>
-      </div>
-      <a class="card" href="article.html">
-        <div class="card-meta">
-          <span>2026-06-10</span>
-          <span class="sep">·</span>
-          <span>发布于 人人都是产品经理</span>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="kicker"><span class="pulse"></span>AI PM OPERATING SYSTEM</div>
+        <h1 id="hero-title">把产品工作，沉淀成<span class="headline-accent">可复用系统</span></h1>
+        <p class="slogan">执行越来越便宜的时代，我关注三件事：<strong>定义问题、设定标准、验收结果</strong>。这里记录我的 AI 产品方法、文章和可玩的实验。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#writing">阅读最新文章</a>
+          <a class="button" href="#lab">进入实验室</a>
         </div>
-        <h3>Fable 5 发布：AI 第一次能接管“以天计”的工作，产品经理该怎么接？</h3>
-        <p class="desc">Fable 5 真正值得关注的，不是又一次跑分刷新，而是 AI 第一次可以稳定接管“以天为单位”的完整工作流。会委托的人和只会提问的人，产出差距会迅速拉开——文末附一个可以直接抄走的委托模板。</p>
-        <span class="read-more">阅读全文 →</span>
+      </div>
+
+      <aside class="terminal" aria-label="AI 产品经理工作台预览">
+        <div class="terminal-top">
+          <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
+          <span>delegate-workflow.json</span>
+        </div>
+        <div class="terminal-body">
+          <div class="prompt">
+            <div class="prompt-line">lixudong@ai-pm <strong>run</strong> task_delegation</div>
+            <div class="prompt-line">目标：把一次任务变成下一次可复用的资产</div>
+          </div>
+          <div class="task-stack">
+            <div class="task">
+              <span class="task-index">01</span>
+              <div>
+                <h3>定义任务与背景</h3>
+                <p>明确它服务哪个决策，而不是只描述要生成什么。</p>
+              </div>
+              <span class="status">READY</span>
+            </div>
+            <div class="task">
+              <span class="task-index">02</span>
+              <div>
+                <h3>写出验收清单</h3>
+                <p>产出格式、判断标准、事实与推测边界一次说清。</p>
+              </div>
+              <span class="status">CHECK</span>
+            </div>
+            <div class="task">
+              <span class="task-index">03</span>
+              <div>
+                <h3>沉淀为 Skill</h3>
+                <p>重复第三次的工作流，不再靠复制提示词续命。</p>
+              </div>
+              <span class="status">STORE</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="methods">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>方法库不是资料夹，是操作系统</h2>
+        <p>我把产品经理的常见工作拆成可委托、可验收、可复盘的模块，让 AI 不是回答问题，而是接住一段完整工作。</p>
+      </div>
+      <div class="method-grid">
+        <article class="method">
+          <code>FRAME</code>
+          <h3>问题框定</h3>
+          <p>把模糊想法压缩成目标用户、业务约束、成功信号和排除项。</p>
+        </article>
+        <article class="method">
+          <code>RESEARCH</code>
+          <h3>研究委托</h3>
+          <p>竞品、行业、用户访谈和公开信息，不止收集，更要标注置信度。</p>
+        </article>
+        <article class="method">
+          <code>PROTOTYPE</code>
+          <h3>原型验证</h3>
+          <p>把一个需求推进到可体验版本，用真实反馈替代纸面争论。</p>
+        </article>
+        <article class="method">
+          <code>SKILL</code>
+          <h3>资产沉淀</h3>
+          <p>把第三次重复出现的任务，写成可复用流程、标准和模板。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="writing">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>最新文章</h2>
+        <p>关注 AI 能力变化背后的产品工作方式变化，以及产品经理怎么把新能力变成稳定产出。</p>
+      </div>
+      <a class="writing-card reveal" href="article.html">
+        <div>
+          <div class="meta">
+            <span>2026-06-10</span>
+            <span>站内文章</span>
+          </div>
+          <h3>Fable 5 发布：AI 第一次能接管“以天计”的工作，产品经理该怎么接？</h3>
+          <p>真正值得关注的不是又一次跑分刷新，而是 AI 第一次可以稳定接管“以天为单位”的完整工作流。会委托的人和只会提问的人，产出差距会迅速拉开。</p>
+          <span class="read-more">阅读全文</span>
+        </div>
+        <div class="article-gauge">
+          <div class="gauge-number">5</div>
+          <div class="gauge-label">个章节，围绕长任务模型、委托模板、原型验证和方法资产</div>
+          <div class="tag-row">
+            <span class="tag">AI 产品</span>
+            <span class="tag">委托思维</span>
+            <span class="tag">Skill</span>
+          </div>
+        </div>
       </a>
     </div>
   </section>
 
-  <!-- 实验室 -->
   <section id="lab">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head reveal">
         <h2>实验室</h2>
-        <span class="en">Lab</span>
+        <p>方法论需要被做成东西。这里放我用 AI 推进出来的可玩 Demo、交互原型和工作流实验。</p>
       </div>
       <div class="lab-grid">
-        <a class="card" href="https://rose-for-future.github.io/voxel-world/">
-          <div class="lab-icon">⛏️</div>
-          <div class="card-meta">
-            <span class="badge">可玩 Demo</span>
+        <a class="lab-card" href="https://rose-for-future.github.io/voxel-world/" target="_blank" rel="noopener">
+          <div class="lab-content">
+            <span class="badge">可玩 Demo · AI Agent</span>
+            <h3>体素世界 Voxel World</h3>
+            <p>类 Minecraft 网页沙盒，内置一个可观测、可撤回、可断点续接的 AI Agent 小人：给它一句目标，它就逐步施工，过程全程留痕、随时能撤回、刷新也能从断点接着干。重点是一次完整的 AI 产品决策如何从想法跑到上线。</p>
+            <span class="read-more">进入世界</span>
           </div>
-          <h3>体素世界 Voxel World</h3>
-          <p class="desc">一个类 Minecraft 的网页小游戏：在浏览器里挖方块、搭建筑，体验从零手搓一个体素引擎。</p>
-          <span class="read-more">进入世界 →</span>
+          <div class="voxel-scene" aria-hidden="true">
+            <span class="cube"></span>
+            <span class="cube"></span>
+            <span class="cube"></span>
+            <span class="cube"></span>
+            <span class="cube"></span>
+            <span class="cube"></span>
+            <span class="cube"></span>
+          </div>
         </a>
-        <div class="card disabled">
-          <div class="lab-icon">🎙️</div>
-          <div class="card-meta">
-            <span class="badge muted">建设中</span>
+
+        <article class="lab-card disabled">
+          <div class="lab-content">
+            <span class="badge">建设中</span>
+            <h3>语音助手实验</h3>
+            <p>探索语音交互与工作流委托的结合：用一句话把一天的任务拆给 AI，并留下可复盘的过程记录。</p>
           </div>
-          <h3>语音助手实验</h3>
-          <p class="desc">探索语音交互与工作流委托的结合：用一句话把一整天的任务交出去。敬请期待。</p>
-        </div>
+          <div class="wave" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </article>
       </div>
     </div>
   </section>
-
 </main>
 
 <footer>
   <div class="wrap">
     <span>© 2026 lixudong · AI 产品经理</span>
-    <span>本站内容原创发布于 <a href="#" rel="noopener">人人都是产品经理</a>，未经许可禁止转载。</span>
+    <span>内容为个人原创记录，持续更新中。</span>
   </div>
 </footer>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const revealTargets = document.querySelectorAll('.reveal, .method-grid, .lab-card');
+  const tasks = Array.from(document.querySelectorAll('.task'));
+
+  const revealNow = () => {
+    const triggerLine = window.innerHeight * 0.88;
+    revealTargets.forEach((target) => {
+      const rect = target.getBoundingClientRect();
+      if (rect.top < triggerLine) {
+        target.classList.add('is-visible');
+      }
+    });
+  };
+
+  if (reduceMotion) {
+    revealTargets.forEach((target) => target.classList.add('is-visible'));
+  } else {
+    revealNow();
+    window.addEventListener('scroll', revealNow, { passive: true });
+    window.addEventListener('resize', revealNow);
+  }
+
+  let activeTask = 0;
+  const syncTaskState = () => {
+    tasks.forEach((task, index) => {
+      task.classList.toggle('is-active', index === activeTask);
+    });
+    activeTask = (activeTask + 1) % tasks.length;
+  };
+
+  if (tasks.length) {
+    syncTaskState();
+    if (!reduceMotion) {
+      window.setInterval(syncTaskState, 2200);
+    }
+  }
+</script>
 
 </body>
 </html>
