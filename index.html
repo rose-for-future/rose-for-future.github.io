@@ -1004,6 +1004,35 @@
     to { opacity: 0; transform: translateY(-34px) scale(1.15); }
   }
 
+  #cat-debug {
+    position: fixed;
+    z-index: 46;
+    padding: 7px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: var(--panel-strong);
+    color: var(--cyan);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    line-height: 1.55;
+    white-space: pre;
+    pointer-events: none;
+  }
+
+  .cat-fish {
+    position: fixed;
+    z-index: 46;
+    font-size: 22px;
+    pointer-events: none;
+    animation: fishDrop 0.8s cubic-bezier(0.3, 0, 0.7, 1) forwards;
+  }
+
+  @keyframes fishDrop {
+    from { opacity: 0; transform: translateY(-12px); }
+    30% { opacity: 1; }
+    to { opacity: 0; transform: translateY(74px) rotate(40deg); }
+  }
+
   @media (max-width: 640px) {
     #site-cat { width: 84px; height: 84px; }
   }
@@ -1621,7 +1650,7 @@
   const termLog = document.getElementById('term-log');
   const termInput = document.getElementById('term-input');
   const COMMANDS = {
-    help: ['可用命令：works · skills · motto · status · contact · sudo · clear'],
+    help: ['可用命令：works · skills · motto · status · contact · sudo · cat · feed · clear'],
     works: ['3 个作品：喵秘书 / 体素世界 / 贾维斯042 → 带你去看', '@goto:#works'],
     skills: ['5 个 skill 常驻运行 → 带你去看', '@goto:#skills'],
     motto: ['「做难而正确的事」'],
@@ -1648,6 +1677,18 @@
     if (!cmd) return;
     termPrint('$ ' + raw.trim(), 'cmd');
     if (cmd === 'clear') { termLog.innerHTML = ''; return; }
+    if (window.__siteCat && (cmd === 'cat' || cmd === 'feed' || cmd === 'feed cat' || cmd === 'cat --debug')) {
+      if (cmd === 'cat --debug') {
+        termPrint(window.__siteCat.debug() ? '已开启猫的状态机面板' : '已关闭猫的状态机面板', 'out');
+      } else if (cmd.startsWith('feed')) {
+        window.__siteCat.feed();
+        termPrint('🐟 已投喂', 'out');
+      } else {
+        window.__siteCat.call();
+        termPrint('喵——它来了', 'out');
+      }
+      return;
+    }
     let entry = COMMANDS[cmd.split(/\s+/)[0]];
     if (entry && entry[0].startsWith('@alias:')) entry = COMMANDS[entry[0].slice(7)];
     if (!entry) { termPrint('command not found: ' + cmd + '（试试 help）', 'out warn'); return; }
@@ -1724,10 +1765,10 @@
   let headPos = 144, headTarget = 144;
   let mouse = { x: innerWidth / 2, y: 0, t: 0 };
   let lastInteract = performance.now();
-  let hop = null, hopWait = 9000 + Math.random() * 12000;
+  let hop = null, hopWait = 4000 + Math.random() * 6000, wander = null, hopRest = 0;
   let fall = null, squash = 0;
   let grab = null, moved = 0, downAt = 0;
-  let zzzTimer = 0;
+  let zzzTimer = 0, mood = 70;
 
   /* 视线角度 → head360 帧（0=看左, 84=看上, 144=看前, 168=看右） */
   function angleToFrame(theta) {
@@ -1864,6 +1905,7 @@
     lastInteract = performance.now();
     if (wasClick) {
       talk();
+      mood = Math.min(100, mood + 4);
       if (state === 'drag') state = 'idle';
     } else if (state === 'drag') {
       fall = { vy: 0 };
@@ -1898,7 +1940,7 @@
       const ccx = x + size() / 2, ccy = y + size() * 0.35;
       const theta = Math.atan2(ccy - mouse.y, mouse.x - ccx) * 180 / Math.PI;
       headTarget = angleToFrame(theta);
-      if (t - mouse.t > 2600) {
+      if (t - mouse.t > 1400) {
         headTarget = 144;
         const d = Math.abs(((144 - headPos + 96) % 192) - 96);
         if (d < 4) state = 'idle';
@@ -1911,25 +1953,34 @@
     idleT += dt;
     if (idleT > 0.12) { idleT = 0; idleFrame = (idleFrame + 1) % IDLE_N; }
 
-    /* 蹦跳 */
+    /* 溜达：挑个目标点，连续小跳走过去（注视状态也照走） */
     let jumpY = 0;
-    if (state === 'idle' && !reduce && !fall) {
+    const roaming = (state === 'idle' || state === 'gaze') && !reduce && !fall && !grab;
+    if (roaming) {
       hopWait -= dt * 1000;
-      if (hopWait <= 0 && !hop) {
-        const dir = Math.random() > 0.5 ? 1 : -1;
-        const dist = (50 + Math.random() * 90) * dir;
-        const tx = Math.max(12, Math.min(x + dist, innerWidth - size() - 12));
-        hop = { t: 0, dur: 0.55, x0: x, dx: tx - x };
-        hopWait = 9000 + Math.random() * 14000;
+      if (hopWait <= 0 && !wander) {
+        const m = 16;
+        wander = { target: m + Math.random() * Math.max(1, innerWidth - size() - m * 2) };
+        hopWait = 6000 + Math.random() * 9000;
+      }
+    }
+    if (hopRest > 0) hopRest -= dt;
+    if (wander && !hop && hopRest <= 0 && roaming) {
+      const d = wander.target - x;
+      if (Math.abs(d) < 20) {
+        wander = null;
+      } else {
+        hop = { t: 0, dur: 0.48, x0: x, dx: Math.sign(d) * Math.min(90, Math.abs(d)) };
       }
     }
     if (hop) {
       hop.t += dt;
       const p = Math.min(1, hop.t / hop.dur);
       x = hop.x0 + hop.dx * p;
-      jumpY = Math.sin(p * Math.PI) * 26;
-      if (p >= 1) { hop = null; squash = 0.18; }
+      jumpY = Math.sin(p * Math.PI) * 24;
+      if (p >= 1) { hop = null; squash = 0.16; hopRest = 0.18 + Math.random() * 0.5; }
     }
+    mood = Math.max(40, mood - dt * 0.05);
 
     /* 拖拽松手回落 */
     if (fall) {
@@ -1953,9 +2004,19 @@
     cat.style.height = size() + 'px';
     cat.classList.toggle('sleeping', state === 'sleep');
 
-    /* 绘制 */
+    /* debug 面板 */
+    if (debugEl) {
+      debugEl.style.left = Math.max(8, Math.min(x - 30, innerWidth - 170)) + 'px';
+      debugEl.style.top = Math.max(8, y - 92) + 'px';
+      debugEl.textContent = 'state: ' + state + (hop ? '+hop' : '') +
+        '\nmood:  ' + Math.round(mood) +
+        '\nhead:  ' + Math.round(headPos) + ' -> ' + Math.round(headTarget) +
+        '\nnext:  ' + (wander ? 'wandering' : Math.max(0, hopWait / 1000).toFixed(1) + 's');
+    }
+
+    /* 绘制（跳跃时用全身帧，注视/拖拽用转头帧） */
     let sheet, cols, idx;
-    if ((state === 'gaze' || state === 'drag') && sheets.head.complete && sheets.head.naturalWidth) {
+    if (!hop && (state === 'gaze' || state === 'drag') && sheets.head.complete && sheets.head.naturalWidth) {
       sheet = sheets.head; cols = HEAD_COLS;
       idx = Math.round(headPos / 6) % HEAD_N;
     } else {
@@ -1987,6 +2048,46 @@
       raf = requestAnimationFrame(loop);
     }
   });
+
+  /* ===== 极客接口：终端联动 & 状态机面板 ===== */
+  let debugEl = null;
+  function toggleDebug() {
+    if (debugEl) { debugEl.remove(); debugEl = null; return false; }
+    debugEl = document.createElement('div');
+    debugEl.id = 'cat-debug';
+    document.body.appendChild(debugEl);
+    return true;
+  }
+  window.__siteCat = {
+    call() {
+      const term = document.querySelector('.terminal');
+      const r = term ? term.getBoundingClientRect() : null;
+      const inView = r && r.top < innerHeight && r.bottom > 0;
+      const tx = inView ? r.left + r.width / 2 - size() / 2 : innerWidth / 2 - size() / 2;
+      wander = { target: Math.max(16, Math.min(tx, innerWidth - size() - 16)) };
+      hopRest = 0;
+      if (state === 'sleep') state = 'idle';
+      lastInteract = performance.now();
+      setTimeout(() => talk('叫我？'), 1100);
+    },
+    feed() {
+      if (state === 'sleep') state = 'idle';
+      lastInteract = performance.now();
+      const fish = document.createElement('div');
+      fish.className = 'cat-fish';
+      fish.textContent = '🐟';
+      fish.style.left = (x + size() / 2 - 12) + 'px';
+      fish.style.top = (y - 86) + 'px';
+      document.body.appendChild(fish);
+      setTimeout(() => fish.remove(), 900);
+      setTimeout(() => {
+        squash = 0.2;
+        mood = Math.min(100, mood + 10);
+        talk('谢谢投喂，记在主人账上。');
+      }, 700);
+    },
+    debug: toggleDebug,
+  };
 
   /* 首帧立即定位（rAF 在后台标签页不触发） */
   drawStatic();
