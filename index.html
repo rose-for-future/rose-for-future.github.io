@@ -882,19 +882,55 @@
     font-size: 14px;
   }
 
+  .zoo-pets {
+    position: absolute;
+    right: 26px;
+    bottom: 22px;
+    display: flex;
+    gap: 14px;
+    font-size: 34px;
+  }
+
+  .zoo-pets span {
+    animation: zooBob 1.6s ease-in-out infinite;
+  }
+
+  .zoo-pets span:nth-child(2) { animation-delay: -0.4s; }
+  .zoo-pets span:nth-child(3) { animation-delay: -0.8s; }
+  .zoo-pets span:nth-child(4) { animation-delay: -1.2s; }
+
+  @keyframes zooBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .method-link {
+    display: inline-flex;
+    margin-top: 14px;
+    color: var(--cyan);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .sys-status {
+    margin-top: 16px;
+    color: var(--cyan);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
   .lab-card.jarvis {
-    grid-column: 1 / -1;
-    min-height: 230px;
+    padding-bottom: 116px;
   }
 
   .wave {
     position: absolute;
-    inset: auto 30px 30px auto;
+    inset: auto 28px 24px auto;
     display: flex;
     align-items: end;
-    gap: 9px;
-    width: 240px;
-    height: 96px;
+    gap: 8px;
+    width: 190px;
+    height: 76px;
   }
 
   .wave span {
@@ -1138,11 +1174,13 @@
           <code>PROTOTYPE</code>
           <h3>原型验证</h3>
           <p>把一个需求推进到可体验版本，用真实反馈替代纸面争论。</p>
+          <a class="method-link" href="#works">实例 → 作品区</a>
         </article>
         <article class="method">
           <code>SKILL</code>
           <h3>资产沉淀</h3>
           <p>把第三次重复出现的任务，写成可复用流程、标准和模板。</p>
+          <a class="method-link" href="#skills">实例 → Skills 武器库</a>
         </article>
       </div>
     </div>
@@ -1195,8 +1233,8 @@
         <article class="lab-card jarvis">
           <div class="lab-content">
             <span class="badge">实时语音 · 双引擎</span>
-            <h3>贾维斯042号 · 语音面试分身</h3>
-            <p>一个能开口的「我」：访客像面试一样语音提问我的经历、项目和产品思考，分身用我的克隆音色实时作答。端到端与级联双引擎一键切换、延迟逐段可观测——这组架构取舍本身，就是产品的一部分。</p>
+            <h3>贾维斯042号 · 语音数字分身</h3>
+            <p>一个能开口的「我」：访客直接和分身语音对话，它用我的克隆音色实时作答；它说什么、不说什么，由一份逐条核查过的个人事实库划定边界。端到端与级联双引擎一键切换、延迟逐段可观测——这组架构取舍本身，就是产品的一部分。</p>
             <div class="tag-row">
               <span class="tag">端到端 ~0.35s 响应</span>
               <span class="tag">级联 · 克隆音色</span>
@@ -1208,6 +1246,18 @@
             <span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
         </article>
+
+        <a class="lab-card" href="zoo/" target="_blank" rel="noopener">
+          <div class="lab-content">
+            <span class="badge">可玩 Demo · 需要麦克风</span>
+            <h3>早读动物园</h3>
+            <p>给中小学早读课做的游戏化分贝计：学生齐声朗读，音量达标就有像素小动物冒出来，持续达标不断繁衍——用即时可视化激励，替代老师一遍遍催「大点声」。从 PRD 到可玩，只有一个单 HTML 文件。</p>
+            <span class="read-more">开始朗读</span>
+          </div>
+          <div class="zoo-pets" aria-hidden="true">
+            <span>🐣</span><span>🐰</span><span>🦊</span><span>🐼</span>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -1274,6 +1324,7 @@
       <div class="about-card reveal">
         <div>
           <p>我是 <strong>lixudong</strong>，AI 产品经理。在执行越来越便宜的时代，我押注三件事：<strong>定义问题、设定标准、验收结果</strong>。重复第三次的工作流，就沉淀成 Skill；值得做的想法，就用 AI 一路推进到能用、能玩、能上线。这个站就是这套工作方式的公开档案，持续更新。</p>
+          <div class="sys-status">$ status → 5 个 Skill 常驻运行 · 4 个作品 · 1 个语音分身待部署</div>
         </div>
         <div class="contact-col">
           <a class="button primary" href="https://github.com/rose-for-future" target="_blank" rel="noopener">GitHub · rose-for-future</a>
