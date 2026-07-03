@@ -882,28 +882,6 @@
     font-size: 14px;
   }
 
-  .zoo-pets {
-    position: absolute;
-    right: 26px;
-    bottom: 22px;
-    display: flex;
-    gap: 14px;
-    font-size: 34px;
-  }
-
-  .zoo-pets span {
-    animation: zooBob 1.6s ease-in-out infinite;
-  }
-
-  .zoo-pets span:nth-child(2) { animation-delay: -0.4s; }
-  .zoo-pets span:nth-child(3) { animation-delay: -0.8s; }
-  .zoo-pets span:nth-child(4) { animation-delay: -1.2s; }
-
-  @keyframes zooBob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-
   .method-link {
     display: inline-flex;
     margin-top: 14px;
@@ -920,7 +898,9 @@
   }
 
   .lab-card.jarvis {
-    padding-bottom: 116px;
+    grid-column: 1 / -1;
+    min-height: 240px;
+    padding-bottom: 110px;
   }
 
   .wave {
@@ -1247,17 +1227,6 @@
           </div>
         </article>
 
-        <a class="lab-card" href="zoo/" target="_blank" rel="noopener">
-          <div class="lab-content">
-            <span class="badge">可玩 Demo · 需要麦克风</span>
-            <h3>早读动物园</h3>
-            <p>给中小学早读课做的游戏化分贝计：学生齐声朗读，音量达标就有像素小动物冒出来，持续达标不断繁衍——用即时可视化激励，替代老师一遍遍催「大点声」。从 PRD 到可玩，只有一个单 HTML 文件。</p>
-            <span class="read-more">开始朗读</span>
-          </div>
-          <div class="zoo-pets" aria-hidden="true">
-            <span>🐣</span><span>🐰</span><span>🦊</span><span>🐼</span>
-          </div>
-        </a>
       </div>
     </div>
   </section>
@@ -1324,7 +1293,7 @@
       <div class="about-card reveal">
         <div>
           <p>我是 <strong>lixudong</strong>，AI 产品经理。在执行越来越便宜的时代，我押注三件事：<strong>定义问题、设定标准、验收结果</strong>。重复第三次的工作流，就沉淀成 Skill；值得做的想法，就用 AI 一路推进到能用、能玩、能上线。这个站就是这套工作方式的公开档案，持续更新。</p>
-          <div class="sys-status">$ status → 5 个 Skill 常驻运行 · 4 个作品 · 1 个语音分身待部署</div>
+          <div class="sys-status">$ status → 5 个 Skill 常驻运行 · 3 个作品 · 1 个语音分身待部署</div>
         </div>
         <div class="contact-col">
           <a class="button primary" href="https://github.com/rose-for-future" target="_blank" rel="noopener">GitHub · rose-for-future</a>
