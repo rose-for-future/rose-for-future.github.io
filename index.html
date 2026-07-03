@@ -942,6 +942,72 @@
     font-size: 13px;
   }
 
+  /* ===== 站猫（喵秘书网页分身） ===== */
+  #site-cat {
+    position: fixed;
+    z-index: 45;
+    width: 112px;
+    height: 112px;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    filter: drop-shadow(0 10px 10px rgba(15, 45, 42, 0.22));
+    transform-origin: 50% 100%;
+  }
+
+  html[data-theme="dark"] #site-cat {
+    filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.5));
+  }
+
+  #site-cat.dragging { cursor: grabbing; }
+  #site-cat.sleeping { opacity: 0.85; }
+
+  #cat-bubble {
+    position: fixed;
+    z-index: 46;
+    max-width: 250px;
+    padding: 9px 13px;
+    border: 1px solid var(--line-strong);
+    border-radius: 14px 14px 4px 14px;
+    background: var(--panel-strong);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.55;
+    box-shadow: 0 12px 34px rgba(15, 45, 42, 0.18);
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+    transition: opacity 0.22s, transform 0.22s cubic-bezier(0.2, 1.2, 0.4, 1);
+    pointer-events: none;
+  }
+
+  #cat-bubble.show { opacity: 1; transform: translateY(0) scale(1); }
+
+  html[data-theme="dark"] #cat-bubble {
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+  }
+
+  .cat-zzz {
+    position: fixed;
+    z-index: 46;
+    color: var(--faint);
+    font-family: var(--mono);
+    font-size: 13px;
+    pointer-events: none;
+    animation: zzzFloat 2.4s ease-out forwards;
+  }
+
+  @keyframes zzzFloat {
+    from { opacity: 0; transform: translateY(0) scale(0.8); }
+    20% { opacity: 0.9; }
+    to { opacity: 0; transform: translateY(-34px) scale(1.15); }
+  }
+
+  @media (max-width: 640px) {
+    #site-cat { width: 84px; height: 84px; }
+  }
+
   .lab-card.jarvis {
     grid-column: 1 / -1;
     min-height: 240px;
@@ -1617,6 +1683,319 @@
       })
       .catch(() => {});
   });
+</script>
+
+<script>
+/* ===== 站猫：喵秘书的网页分身 ===== */
+(() => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+
+  const cat = document.createElement('canvas');
+  cat.id = 'site-cat';
+  cat.width = 256;
+  cat.height = 256;
+  cat.setAttribute('aria-label', '站猫喵秘书，点它会说话');
+  cat.setAttribute('role', 'img');
+  document.body.appendChild(cat);
+  const cx = cat.getContext('2d');
+
+  const bubble = document.createElement('div');
+  bubble.id = 'cat-bubble';
+  document.body.appendChild(bubble);
+
+  const sheets = { idle: new Image(), head: new Image() };
+  sheets.idle.src = 'assets/cat-idle-sheet.webp';
+  sheets.head.src = 'assets/cat-head-sheet.webp';
+  const IDLE_N = 21, IDLE_COLS = 7, HEAD_N = 32, HEAD_COLS = 8, F = 128;
+
+  const size = () => (window.innerWidth <= 640 ? 84 : 112);
+  let x = 0, y = 0, homed = false;
+  const baseY = () => window.innerHeight - size() - 6;
+  function home() {
+    x = window.innerWidth - size() - 18;
+    y = baseY();
+  }
+  home();
+
+  /* 状态机：idle | gaze | drag | sleep */
+  let state = 'idle';
+  let idleFrame = 0, idleT = 0;
+  let headPos = 144, headTarget = 144;
+  let mouse = { x: innerWidth / 2, y: 0, t: 0 };
+  let lastInteract = performance.now();
+  let hop = null, hopWait = 9000 + Math.random() * 12000;
+  let fall = null, squash = 0;
+  let grab = null, moved = 0, downAt = 0;
+  let zzzTimer = 0;
+
+  /* 视线角度 → head360 帧（0=看左, 84=看上, 144=看前, 168=看右） */
+  function angleToFrame(theta) {
+    if (theta >= 90) return ((180 - theta) / 90) * 84;
+    if (theta >= 0) return 84 + ((90 - theta) / 90) * 84;
+    if (theta >= -90) return 168 + (-theta / 90) * 12;
+    return 180 + ((-theta - 90) / 90) * 12;
+  }
+
+  /* ===== 台词 ===== */
+  const LINES = {
+    generic: ['喵。', '主人在做难而正确的事，我在做难而正确的猫。', '别戳了，挠下巴还差不多。', '$ purr --loop', '我是喵秘书。桌面版的我还会记提醒。'],
+    hero: ['那个终端是真的，输 help 试试。', '欢迎来到主人的工作台。'],
+    methods: ['方法库不是资料夹，是操作系统——他天天这么说。'],
+    works: ['这些都是主人搓出来的，我住在第一张卡里。', '体素世界不错，可惜没有猫。'],
+    skills: ['五个 Skill 天天在跑，我负责监工。', '发布前体检救过他一次，真事。'],
+    about: ['正经事发邮件，撸猫免谈。'],
+    dark: ['夜猫子？我也是。', '深色模式，适合撸代码和撸猫。'],
+    night: ['这么晚还看个站，敬业。'],
+    morning: ['早。今天也做难而正确的事。'],
+  };
+  let saidHello = false;
+
+  function currentSection() {
+    const mid = innerHeight * 0.5;
+    for (const id of ['about', 'skills', 'works', 'methods']) {
+      const el = document.getElementById(id);
+      if (el) {
+        const r = el.getBoundingClientRect();
+        if (r.top < mid && r.bottom > mid) return id;
+      }
+    }
+    return 'hero';
+  }
+
+  function pickLine() {
+    const h = new Date().getHours();
+    if (!saidHello) {
+      saidHello = true;
+      if (h >= 23 || h < 5) return LINES.night[0];
+      if (h >= 5 && h < 9) return LINES.morning[0];
+    }
+    const pool = [];
+    const sec = LINES[currentSection()];
+    if (sec && Math.random() < 0.45) pool.push(...sec);
+    if (document.documentElement.dataset.theme === 'dark' && Math.random() < 0.25) pool.push(...LINES.dark);
+    if (!pool.length) pool.push(...LINES.generic);
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  let bubbleTimer = null, typeTimer = null;
+  function talk(text) {
+    const line = text || pickLine();
+    clearTimeout(bubbleTimer);
+    clearInterval(typeTimer);
+    /* 先量好整体尺寸再打字，气泡不跳动 */
+    bubble.textContent = line;
+    bubble.style.left = '0px';
+    bubble.style.top = '-9999px';
+    bubble.classList.add('show');
+    const bw = bubble.offsetWidth, bh = bubble.offsetHeight;
+    bubble.style.width = bw + 'px';
+    bubble.style.height = bh + 'px';
+    bubble.style.left = Math.max(8, Math.min(x + size() - bw, innerWidth - bw - 8)) + 'px';
+    bubble.style.top = Math.max(8, y - bh - 12) + 'px';
+    if (reduce) {
+      bubble.textContent = line;
+    } else {
+      bubble.textContent = '';
+      let i = 0;
+      typeTimer = setInterval(() => {
+        bubble.textContent = line.slice(0, ++i);
+        if (i >= line.length) clearInterval(typeTimer);
+      }, 34);
+    }
+    bubbleTimer = setTimeout(() => {
+      bubble.classList.remove('show');
+      bubble.style.width = '';
+      bubble.style.height = '';
+    }, 3200 + line.length * 60);
+  }
+
+  function spawnZzz() {
+    const z = document.createElement('div');
+    z.className = 'cat-zzz';
+    z.textContent = 'z'.repeat(1 + Math.floor(Math.random() * 3));
+    z.style.left = (x + size() * 0.62 + Math.random() * 14) + 'px';
+    z.style.top = (y + 8) + 'px';
+    document.body.appendChild(z);
+    setTimeout(() => z.remove(), 2500);
+  }
+
+  /* ===== 交互 ===== */
+  window.addEventListener('pointermove', (e) => {
+    mouse = { x: e.clientX, y: e.clientY, t: performance.now() };
+    lastInteract = mouse.t;
+    if (state === 'sleep') state = 'idle';
+    if (!coarse && !reduce && state !== 'drag') state = 'gaze';
+  }, { passive: true });
+
+  window.addEventListener('scroll', () => {
+    lastInteract = performance.now();
+    if (state === 'sleep') state = 'idle';
+  }, { passive: true });
+
+  cat.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    try { cat.setPointerCapture(e.pointerId); } catch (err) {}
+    grab = { dx: e.clientX - x, dy: e.clientY - y };
+    moved = 0;
+    downAt = performance.now();
+    lastInteract = downAt;
+    if (state === 'sleep') state = 'idle';
+  });
+
+  cat.addEventListener('pointermove', (e) => {
+    if (!grab) return;
+    const nx = e.clientX - grab.dx, ny = e.clientY - grab.dy;
+    moved += Math.abs(nx - x) + Math.abs(ny - y);
+    if (moved > 6) {
+      state = 'drag';
+      homed = true;
+      cat.classList.add('dragging');
+      x = Math.max(4, Math.min(nx, innerWidth - size() - 4));
+      y = Math.max(4, Math.min(ny, innerHeight - size() - 4));
+    }
+  });
+
+  cat.addEventListener('pointerup', () => {
+    if (!grab) return;
+    const wasClick = moved <= 6 && performance.now() - downAt < 400;
+    grab = null;
+    cat.classList.remove('dragging');
+    lastInteract = performance.now();
+    if (wasClick) {
+      talk();
+      if (state === 'drag') state = 'idle';
+    } else if (state === 'drag') {
+      fall = { vy: 0 };
+      state = 'idle';
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (!homed) home();
+    x = Math.min(x, innerWidth - size() - 4);
+    y = Math.min(y, baseY());
+  });
+
+  /* ===== 主循环 ===== */
+  let last = performance.now(), raf = null;
+  function loop(t) {
+    raf = requestAnimationFrame(loop);
+    const dt = Math.min(0.05, (t - last) / 1000);
+    last = t;
+
+    /* 睡觉判定 */
+    if (state === 'idle' && !reduce && t - lastInteract > 75000) {
+      state = 'sleep';
+    }
+    if (state === 'sleep') {
+      zzzTimer -= dt;
+      if (zzzTimer <= 0) { zzzTimer = 2.2; spawnZzz(); }
+    }
+
+    /* 视线 */
+    if (state === 'gaze') {
+      const ccx = x + size() / 2, ccy = y + size() * 0.35;
+      const theta = Math.atan2(ccy - mouse.y, mouse.x - ccx) * 180 / Math.PI;
+      headTarget = angleToFrame(theta);
+      if (t - mouse.t > 2600) {
+        headTarget = 144;
+        const d = Math.abs(((144 - headPos + 96) % 192) - 96);
+        if (d < 4) state = 'idle';
+      }
+    }
+    const diff = ((headTarget - headPos + 96) % 192 + 192) % 192 - 96;
+    headPos = ((headPos + diff * Math.min(1, dt * 7)) % 192 + 192) % 192;
+
+    /* idle 帧动画 */
+    idleT += dt;
+    if (idleT > 0.12) { idleT = 0; idleFrame = (idleFrame + 1) % IDLE_N; }
+
+    /* 蹦跳 */
+    let jumpY = 0;
+    if (state === 'idle' && !reduce && !fall) {
+      hopWait -= dt * 1000;
+      if (hopWait <= 0 && !hop) {
+        const dir = Math.random() > 0.5 ? 1 : -1;
+        const dist = (50 + Math.random() * 90) * dir;
+        const tx = Math.max(12, Math.min(x + dist, innerWidth - size() - 12));
+        hop = { t: 0, dur: 0.55, x0: x, dx: tx - x };
+        hopWait = 9000 + Math.random() * 14000;
+      }
+    }
+    if (hop) {
+      hop.t += dt;
+      const p = Math.min(1, hop.t / hop.dur);
+      x = hop.x0 + hop.dx * p;
+      jumpY = Math.sin(p * Math.PI) * 26;
+      if (p >= 1) { hop = null; squash = 0.18; }
+    }
+
+    /* 拖拽松手回落 */
+    if (fall) {
+      fall.vy += 2600 * dt;
+      y += fall.vy * dt;
+      if (y >= baseY()) {
+        y = baseY();
+        if (Math.abs(fall.vy) > 260) { fall.vy = -fall.vy * 0.32; squash = 0.2; }
+        else fall = null;
+      }
+    }
+
+    /* 落地压扁回弹 */
+    if (squash > 0) squash = Math.max(0, squash - dt * 1.1);
+    const sq = 1 - squash;
+    cat.style.transform = squash > 0 ? `scaleY(${sq}) scaleX(${1 + squash * 0.7})` : '';
+
+    cat.style.left = Math.round(x) + 'px';
+    cat.style.top = Math.round(y - jumpY) + 'px';
+    cat.style.width = size() + 'px';
+    cat.style.height = size() + 'px';
+    cat.classList.toggle('sleeping', state === 'sleep');
+
+    /* 绘制 */
+    let sheet, cols, idx;
+    if ((state === 'gaze' || state === 'drag') && sheets.head.complete && sheets.head.naturalWidth) {
+      sheet = sheets.head; cols = HEAD_COLS;
+      idx = Math.round(headPos / 6) % HEAD_N;
+    } else {
+      sheet = sheets.idle; cols = IDLE_COLS;
+      idx = state === 'sleep' ? 0 : idleFrame;
+    }
+    if (sheet.complete && sheet.naturalWidth) {
+      cx.clearRect(0, 0, cat.width, cat.height);
+      cx.drawImage(sheet, (idx % cols) * F, Math.floor(idx / cols) * F, F, F, 0, 0, cat.width, cat.height);
+    }
+  }
+
+  function drawStatic() {
+    if (sheets.idle.complete && sheets.idle.naturalWidth) {
+      cx.clearRect(0, 0, cat.width, cat.height);
+      cx.drawImage(sheets.idle, 0, 0, F, F, 0, 0, cat.width, cat.height);
+    }
+    cat.style.left = Math.round(x) + 'px';
+    cat.style.top = Math.round(y) + 'px';
+    cat.style.width = size() + 'px';
+    cat.style.height = size() + 'px';
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (raf) cancelAnimationFrame(raf), raf = null;
+    } else if (!reduce && !raf) {
+      last = performance.now();
+      raf = requestAnimationFrame(loop);
+    }
+  });
+
+  /* 首帧立即定位（rAF 在后台标签页不触发） */
+  drawStatic();
+  sheets.idle.addEventListener('load', () => { if (state !== 'gaze' && state !== 'drag') drawStatic(); });
+
+  if (!reduce) {
+    raf = requestAnimationFrame(loop);
+  }
+})();
 </script>
 
 </body>
