@@ -882,6 +882,54 @@
     font-size: 14px;
   }
 
+  .lab-card.jarvis {
+    grid-column: 1 / -1;
+    min-height: 230px;
+  }
+
+  .wave {
+    position: absolute;
+    inset: auto 30px 30px auto;
+    display: flex;
+    align-items: end;
+    gap: 9px;
+    width: 240px;
+    height: 96px;
+  }
+
+  .wave span {
+    flex: 1;
+    min-width: 10px;
+    border-radius: 999px;
+    background: linear-gradient(to top, rgba(69, 121, 245, 0.24), rgba(216, 148, 34, 0.78));
+    animation: wave 1.4s ease-in-out infinite;
+  }
+
+  .wave span:nth-child(2n) { animation-delay: -0.35s; }
+  .wave span:nth-child(3n) { animation-delay: -0.7s; }
+
+  @keyframes wave {
+    0%, 100% { height: 24px; }
+    50% { height: 88px; }
+  }
+
+  .star-badge {
+    color: var(--gold);
+    font-family: var(--mono);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .star-badge:empty { display: none; }
+
+  .repo-link {
+    display: inline-flex;
+    margin-top: 16px;
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
   .skill-grid .skill-card:nth-child(2) { transition-delay: 0.1s; }
   .skill-grid .skill-card:nth-child(3) { transition-delay: 0.06s; }
   .skill-grid .skill-card:nth-child(4) { transition-delay: 0.16s; }
@@ -981,6 +1029,8 @@
     .lab-card.pet { padding-bottom: 158px; }
     .pet-figure { right: 16px; bottom: 12px; }
     .pet-figure img { width: 132px; height: 132px; }
+    .lab-card.jarvis { padding-bottom: 96px; }
+    .wave { width: 150px; height: 60px; inset: auto 16px 16px auto; }
     .about-card { padding: 22px; }
   }
 
@@ -1107,7 +1157,7 @@
       <div class="lab-grid">
         <article class="lab-card pet">
           <div class="lab-content">
-            <span class="badge">桌面应用 · 私人项目</span>
+            <span class="badge">桌面应用 · 开源</span>
             <h3>喵秘书 · 桌面宠物秘书</h3>
             <p>一只浮在桌面右下角的英短猫：单击它就能语音聊天，用中文口语建/查/删提醒；本地提醒引擎全离线运行，到点用系统语音主动播报，断网也响。安静时，它就在桌面卖萌。</p>
             <div class="tag-row">
@@ -1116,6 +1166,7 @@
               <span class="tag">本地提醒引擎</span>
               <span class="tag">中文时间解析</span>
             </div>
+            <a class="repo-link" href="https://github.com/rose-for-future/pet-secretary" target="_blank" rel="noopener">GitHub 源码 ↗</a>
           </div>
           <picture class="pet-figure">
             <source media="(prefers-reduced-motion: reduce)" srcset="assets/pet-cat-idle-static.png">
@@ -1140,6 +1191,23 @@
             <span class="cube"></span>
           </div>
         </a>
+
+        <article class="lab-card jarvis">
+          <div class="lab-content">
+            <span class="badge">实时语音 · 双引擎</span>
+            <h3>贾维斯042号 · 语音面试分身</h3>
+            <p>一个能开口的「我」：访客像面试一样语音提问我的经历、项目和产品思考，分身用我的克隆音色实时作答。端到端与级联双引擎一键切换、延迟逐段可观测——这组架构取舍本身，就是产品的一部分。</p>
+            <div class="tag-row">
+              <span class="tag">端到端 ~0.35s 响应</span>
+              <span class="tag">级联 · 克隆音色</span>
+              <span class="tag">延迟逐段可观测</span>
+              <span class="tag">私有项目</span>
+            </div>
+          </div>
+          <div class="wave" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </article>
       </div>
     </div>
   </section>
@@ -1162,8 +1230,8 @@
           </div>
         </article>
 
-        <article class="skill-card major reveal">
-          <div class="skill-top"><code>SKILL://信息处理</code><span class="status">ON DEMAND</span></div>
+        <a class="skill-card major reveal" href="https://github.com/rose-for-future/link2note" target="_blank" rel="noopener">
+          <div class="skill-top"><code>SKILL://信息处理</code><span class="star-badge" data-stars="rose-for-future/link2note"></span><span class="status">ON DEMAND</span></div>
           <h3>信息处理 · 链接解析</h3>
           <p>丢给它一个链接——抖音、B站、播客、公众号都行——自动抓取正文、本地转写音视频、识别图片，产出「文字稿 + 要点总结」直接进 Obsidian 知识库。</p>
           <div class="tag-row">
@@ -1171,13 +1239,15 @@
             <span class="tag">要点总结</span>
             <span class="tag">进知识库</span>
           </div>
-        </article>
+          <span class="repo-link">已开源 · link2note ↗</span>
+        </a>
 
-        <article class="skill-card minor reveal">
-          <div class="skill-top"><code>SKILL://爆款实验室</code><span class="status">LOOP</span></div>
+        <a class="skill-card minor reveal" href="https://github.com/rose-for-future/hit-lab" target="_blank" rel="noopener">
+          <div class="skill-top"><code>SKILL://爆款实验室</code><span class="star-badge" data-stars="rose-for-future/hit-lab"></span><span class="status">LOOP</span></div>
           <h3>爆款实验室</h3>
           <p>把内容创作变成可校准的预测循环：发布前盲预测数据，三天后复盘，持续进化评分标准。</p>
-        </article>
+          <span class="repo-link">已开源 ↗</span>
+        </a>
 
         <article class="skill-card minor reveal">
           <div class="skill-top"><code>SKILL://复利复盘</code><span class="status">NIGHTLY</span></div>
@@ -1185,11 +1255,12 @@
           <p>每晚把一天的行动自动分进「复利 / 必要 / 损耗」三个桶写进日记，看清哪些动作在攒资产。</p>
         </article>
 
-        <article class="skill-card minor reveal">
-          <div class="skill-top"><code>SKILL://发布前体检</code><span class="status">GATE</span></div>
+        <a class="skill-card minor reveal" href="https://github.com/rose-for-future/pre-publish-check" target="_blank" rel="noopener">
+          <div class="skill-top"><code>SKILL://发布前体检</code><span class="star-badge" data-stars="rose-for-future/pre-publish-check"></span><span class="status">GATE</span></div>
           <h3>发布前体检</h3>
           <p>仓库公开前的最后一道闸：扫描个人信息、密钥、敏感配置，红灯就不准发。</p>
-        </article>
+          <span class="repo-link">已开源 ↗</span>
+        </a>
       </div>
     </div>
   </section>
@@ -1258,6 +1329,17 @@
       window.setInterval(syncTaskState, 2200);
     }
   }
+
+  document.querySelectorAll('.star-badge[data-stars]').forEach((el) => {
+    fetch('https://api.github.com/repos/' + el.dataset.stars)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.stargazers_count > 0) {
+          el.textContent = '★ ' + data.stargazers_count;
+        }
+      })
+      .catch(() => {});
+  });
 </script>
 
 </body>
