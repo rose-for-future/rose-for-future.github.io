@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>lixudong · AI 产品经理工作台</title>
-<meta name="description" content="lixudong 的个人站：AI 产品经理，把工作方法沉淀成可复用的系统、文章和实验。">
+<meta name="description" content="lixudong 的个人站：AI 产品经理，把工作方法沉淀成可复用的 Skills 和做得出来的作品。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23fff7e3'/%3E%3Crect x='1.5' y='1.5' width='29' height='29' rx='7' fill='none' stroke='%23d89422' stroke-opacity='.5'/%3E%3Ctext x='16' y='23' font-size='20' font-family='monospace' font-weight='700' fill='%23d89422' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://rose-for-future.github.io/">
 <meta property="og:title" content="lixudong · AI 产品经理工作台">
-<meta property="og:description" content="把产品工作沉淀成可复用系统。AI 产品方法、文章，与可玩的 AI 实验。">
+<meta property="og:description" content="把产品工作沉淀成可复用系统。AI 产品方法、天天在用的 Skills，与可玩的作品。">
 <meta name="twitter:card" content="summary">
 <style>
   :root {
@@ -153,6 +153,7 @@
   .hero .kicker,
   .hero h1,
   .hero .slogan,
+  .hero .motto,
   .hero-actions {
     opacity: 0;
     transform: translateY(22px);
@@ -161,7 +162,27 @@
 
   .hero h1 { animation-delay: 0.14s; }
   .hero .slogan { animation-delay: 0.28s; }
-  .hero-actions { animation-delay: 0.42s; }
+  .hero .motto { animation-delay: 0.4s; }
+  .hero-actions { animation-delay: 0.52s; }
+
+  .motto {
+    max-width: 610px;
+    margin-top: 24px;
+    padding: 4px 0 4px 18px;
+    border-left: 3px solid rgba(216, 148, 34, 0.55);
+    font-size: clamp(17px, 2vw, 19px);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .motto span {
+    display: block;
+    margin-top: 2px;
+    color: var(--faint);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 400;
+  }
 
   @keyframes bootIn {
     to {
@@ -738,34 +759,133 @@
     color: var(--muted);
   }
 
-  .wave {
+  .lab-content .tag-row {
+    margin-top: 18px;
+  }
+
+  .pet-figure {
     position: absolute;
-    inset: auto 26px 32px 26px;
+    right: 30px;
+    bottom: 16px;
+    z-index: 0;
+  }
+
+  .pet-figure img {
+    display: block;
+    width: 176px;
+    height: 176px;
+    filter: drop-shadow(0 16px 22px rgba(15, 45, 42, 0.2));
+  }
+
+  .pet-figure::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 2px;
+    width: 120px;
+    height: 16px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(15, 45, 42, 0.16), transparent 70%);
+  }
+
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+  }
+
+  .skill-card {
+    position: relative;
+    overflow: hidden;
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(237, 250, 248, 0.72));
+    box-shadow: 0 18px 56px rgba(15, 45, 42, 0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.24s, border-color 0.24s, box-shadow 0.24s;
+  }
+
+  .skill-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(78, 215, 197, 0.44);
+    box-shadow: inset 0 2px 0 rgba(13, 169, 153, 0.46), 0 26px 70px rgba(13, 169, 153, 0.14);
+  }
+
+  .skill-card.major { grid-column: span 3; }
+  .skill-card.minor { grid-column: span 2; }
+
+  .skill-top {
     display: flex;
-    align-items: end;
-    gap: 9px;
-    height: 96px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 26px;
+    font-family: var(--mono);
+    font-size: 12px;
   }
 
-  .wave span {
-    flex: 1;
-    min-width: 10px;
-    border-radius: 999px;
-    background: linear-gradient(to top, rgba(69, 121, 245, 0.24), rgba(216, 148, 34, 0.78));
-    animation: wave 1.4s ease-in-out infinite;
+  .skill-top code {
+    color: var(--cyan);
+    text-shadow: 0 0 16px rgba(13, 169, 153, 0.18);
   }
 
-  .wave span:nth-child(2n) { animation-delay: -0.35s; }
-  .wave span:nth-child(3n) { animation-delay: -0.7s; }
+  .skill-top .status { font-size: 11px; }
 
-  @keyframes wave {
-    0%, 100% { height: 24px; }
-    50% { height: 88px; }
+  .skill-card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
   }
 
-  .disabled {
-    opacity: 0.72;
+  .skill-card p {
+    color: var(--muted);
+    font-size: 14px;
   }
+
+  .skill-card .tag-row {
+    margin-top: 18px;
+  }
+
+  .about-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(240px, 0.6fr);
+    gap: 32px;
+    align-items: center;
+    padding: 34px;
+    border: 1px solid rgba(246, 180, 75, 0.28);
+    border-radius: var(--radius);
+    background:
+      linear-gradient(135deg, rgba(255, 233, 181, 0.6), transparent 40%),
+      linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(238, 250, 248, 0.72));
+    box-shadow: 0 24px 76px rgba(79, 52, 7, 0.1);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .about-card p {
+    color: var(--muted);
+    max-width: 640px;
+  }
+
+  .about-card p strong { color: var(--text); }
+
+  .contact-col {
+    display: grid;
+    gap: 12px;
+    justify-items: stretch;
+  }
+
+  .contact-col .button {
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .skill-grid .skill-card:nth-child(2) { transition-delay: 0.1s; }
+  .skill-grid .skill-card:nth-child(3) { transition-delay: 0.06s; }
+  .skill-grid .skill-card:nth-child(4) { transition-delay: 0.16s; }
+  .skill-grid .skill-card:nth-child(5) { transition-delay: 0.26s; }
 
   footer {
     border-top: 1px solid var(--line);
@@ -801,6 +921,8 @@
     }
     .method:nth-child(2) { border-right: 0; }
     .method:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+    .skill-card.major { grid-column: span 6; }
+    .about-card { grid-template-columns: 1fr; }
     .article-gauge {
       border-left: 0;
       border-top: 1px solid var(--line);
@@ -853,6 +975,13 @@
       transform: scale(0.75) rotateX(58deg) rotateZ(42deg);
       transform-origin: right bottom;
     }
+    .skill-card.major,
+    .skill-card.minor { grid-column: span 6; }
+    .skill-card { padding: 20px; }
+    .lab-card.pet { padding-bottom: 158px; }
+    .pet-figure { right: 16px; bottom: 12px; }
+    .pet-figure img { width: 132px; height: 132px; }
+    .about-card { padding: 22px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -876,7 +1005,9 @@
     <nav class="nav-links" aria-label="主导航">
       <a href="index.html" class="active">工作台</a>
       <a href="#methods">方法库</a>
-      <a href="#lab">实验室</a>
+      <a href="#works">作品</a>
+      <a href="#skills">Skills</a>
+      <a href="#about">关于</a>
     </nav>
   </div>
 </header>
@@ -887,10 +1018,11 @@
       <div>
         <div class="kicker"><span class="pulse"></span>AI PM OPERATING SYSTEM</div>
         <h1 id="hero-title">把产品工作，沉淀成<span class="headline-accent">可复用系统</span></h1>
-        <p class="slogan">执行越来越便宜的时代，我关注三件事：<strong>定义问题、设定标准、验收结果</strong>。这里记录我的 AI 产品方法、文章和可玩的实验。</p>
+        <p class="slogan">执行越来越便宜的时代，我关注三件事：<strong>定义问题、设定标准、验收结果</strong>。这里记录我的 AI 产品方法、天天在用的 Skills 和可玩的作品。</p>
+        <blockquote class="motto">做难而正确的事<span>—— 我的行事准则</span></blockquote>
         <div class="hero-actions">
-          <a class="button primary" href="#lab">进入实验室</a>
-          <a class="button" href="#methods">了解方法</a>
+          <a class="button primary" href="#works">看看作品</a>
+          <a class="button" href="#skills">Skills 武器库</a>
         </div>
       </div>
 
@@ -966,18 +1098,36 @@
     </div>
   </section>
 
-  <section id="lab">
+  <section id="works">
     <div class="wrap">
       <div class="section-head reveal">
-        <h2>实验室</h2>
-        <p>方法论需要被做成东西。这里放我用 AI 推进出来的可玩 Demo、交互原型和工作流实验。</p>
+        <h2>作品</h2>
+        <p>方法论需要被做成东西。这里放我用 AI 推进到「能用、能玩」的作品：桌面应用、可玩 Demo 和工作流实验。</p>
       </div>
       <div class="lab-grid">
+        <article class="lab-card pet">
+          <div class="lab-content">
+            <span class="badge">桌面应用 · 私人项目</span>
+            <h3>喵秘书 · 桌面宠物秘书</h3>
+            <p>一只浮在桌面右下角的英短猫：单击它就能语音聊天，用中文口语建/查/删提醒；本地提醒引擎全离线运行，到点用系统语音主动播报，断网也响。安静时，它就在桌面卖萌。</p>
+            <div class="tag-row">
+              <span class="tag">Electron</span>
+              <span class="tag">端到端语音</span>
+              <span class="tag">本地提醒引擎</span>
+              <span class="tag">中文时间解析</span>
+            </div>
+          </div>
+          <picture class="pet-figure">
+            <source media="(prefers-reduced-motion: reduce)" srcset="assets/pet-cat-idle-static.png">
+            <img src="assets/pet-cat-idle.webp" alt="喵秘书桌宠动画：一只灰白相间的英短猫坐在桌面上" width="192" height="192" loading="lazy">
+          </picture>
+        </article>
+
         <a class="lab-card" href="https://rose-for-future.github.io/voxel-world/" target="_blank" rel="noopener">
           <div class="lab-content">
             <span class="badge">可玩 Demo · AI Agent</span>
             <h3>体素世界 Voxel World</h3>
-            <p>类 Minecraft 网页沙盒，内置一个可观测、可撤回、可断点续接的 AI Agent 小人：给它一句目标，它就逐步施工，过程全程留痕、随时能撤回、刷新也能从断点接着干。重点是一次完整的 AI 产品决策如何从想法跑到上线。</p>
+            <p>类 Minecraft 网页沙盒，内置一个可观测、可撤回、可断点续接的 AI Agent 小人：给它一句目标，它就逐步施工，过程全程留痕、随时能撤回、刷新也能从断点接着干。</p>
             <span class="read-more">进入世界</span>
           </div>
           <div class="voxel-scene" aria-hidden="true">
@@ -990,17 +1140,74 @@
             <span class="cube"></span>
           </div>
         </a>
+      </div>
+    </div>
+  </section>
 
-        <article class="lab-card disabled">
-          <div class="lab-content">
-            <span class="badge">建设中</span>
-            <h3>语音助手实验</h3>
-            <p>探索语音交互与工作流委托的结合：用一句话把一天的任务拆给 AI，并留下可复盘的过程记录。</p>
-          </div>
-          <div class="wave" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span>
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Skills 武器库</h2>
+        <p>方法库里说「沉淀为 Skill」不是口号——这些是我天天在用的自动化资产，每一个都替我接住一段完整工作。</p>
+      </div>
+      <div class="skill-grid">
+        <article class="skill-card major reveal">
+          <div class="skill-top"><code>SKILL://信息日报</code><span class="status">DAILY</span></div>
+          <h3>信息日报</h3>
+          <p>维护一份订阅名单（公众号、网站、播客、GitHub……），每天自动轮询当日最新内容，筛掉噪音，写成「不点开也能判断要不要深读」的摘要，推送到飞书。</p>
+          <div class="tag-row">
+            <span class="tag">每日自动</span>
+            <span class="tag">降噪筛选</span>
+            <span class="tag">推送飞书</span>
           </div>
         </article>
+
+        <article class="skill-card major reveal">
+          <div class="skill-top"><code>SKILL://信息处理</code><span class="status">ON DEMAND</span></div>
+          <h3>信息处理 · 链接解析</h3>
+          <p>丢给它一个链接——抖音、B站、播客、公众号都行——自动抓取正文、本地转写音视频、识别图片，产出「文字稿 + 要点总结」直接进 Obsidian 知识库。</p>
+          <div class="tag-row">
+            <span class="tag">音视频转写</span>
+            <span class="tag">要点总结</span>
+            <span class="tag">进知识库</span>
+          </div>
+        </article>
+
+        <article class="skill-card minor reveal">
+          <div class="skill-top"><code>SKILL://爆款实验室</code><span class="status">LOOP</span></div>
+          <h3>爆款实验室</h3>
+          <p>把内容创作变成可校准的预测循环：发布前盲预测数据，三天后复盘，持续进化评分标准。</p>
+        </article>
+
+        <article class="skill-card minor reveal">
+          <div class="skill-top"><code>SKILL://复利复盘</code><span class="status">NIGHTLY</span></div>
+          <h3>复利复盘</h3>
+          <p>每晚把一天的行动自动分进「复利 / 必要 / 损耗」三个桶写进日记，看清哪些动作在攒资产。</p>
+        </article>
+
+        <article class="skill-card minor reveal">
+          <div class="skill-top"><code>SKILL://发布前体检</code><span class="status">GATE</span></div>
+          <h3>发布前体检</h3>
+          <p>仓库公开前的最后一道闸：扫描个人信息、密钥、敏感配置，红灯就不准发。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>关于我</h2>
+        <p>一个把「做难而正确的事」当操作系统内核的 AI 产品经理。</p>
+      </div>
+      <div class="about-card reveal">
+        <div>
+          <p>我是 <strong>lixudong</strong>，AI 产品经理。在执行越来越便宜的时代，我押注三件事：<strong>定义问题、设定标准、验收结果</strong>。重复第三次的工作流，就沉淀成 Skill；值得做的想法，就用 AI 一路推进到能用、能玩、能上线。这个站就是这套工作方式的公开档案，持续更新。</p>
+        </div>
+        <div class="contact-col">
+          <a class="button primary" href="https://github.com/rose-for-future" target="_blank" rel="noopener">GitHub · rose-for-future</a>
+          <a class="button" href="mailto:l17805804972@163.com">l17805804972@163.com</a>
+        </div>
       </div>
     </div>
   </section>
@@ -1009,6 +1216,7 @@
 <footer>
   <div class="wrap">
     <span>© 2026 lixudong · AI 产品经理</span>
+    <span><a href="https://github.com/rose-for-future" target="_blank" rel="noopener">GitHub</a> · <a href="mailto:l17805804972@163.com">l17805804972@163.com</a></span>
     <span>内容为个人原创记录，持续更新中。</span>
   </div>
 </footer>
