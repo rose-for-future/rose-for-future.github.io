@@ -1604,7 +1604,7 @@
 <footer>
   <div class="wrap">
     <span>© 2026 lixudong · AI 产品经理</span>
-    <span><a href="https://github.com/rose-for-future" target="_blank" rel="noopener">GitHub</a> · <a href="mailto:l17805804972@163.com">l17805804972@163.com</a></span>
+    <span><a href="https://github.com/rose-for-future" target="_blank" rel="noopener">GitHub</a> · <a href="mailto:l17805804972@163.com">l17805804972@163.com</a> · <a href="status/">status</a></span>
     <span>内容为个人原创记录，持续更新中。</span>
   </div>
 </footer>
@@ -1654,7 +1654,7 @@
     works: ['3 个作品：喵秘书 / 体素世界 / 贾维斯042 → 带你去看', '@goto:#works'],
     skills: ['5 个 skill 常驻运行 → 带你去看', '@goto:#skills'],
     motto: ['「做难而正确的事」'],
-    status: ['5 个 Skill 常驻运行 · 3 个作品 · 1 个语音分身待部署'],
+    status: ['5 个 Skill 常驻运行 · 3 个作品 · 1 个语音分身待部署', '完整监控面板 → 正在打开 /status', '@goto-page:status/'],
     contact: ['github.com/rose-for-future · l17805804972@163.com', '@goto:#about'],
     about: ['@alias:contact'],
     sudo: ['权限不足：难而正确的事，只能自己做。', '@warn'],
@@ -1696,6 +1696,8 @@
     entry.filter((l) => !l.startsWith('@')).forEach((l) => termPrint(l, 'out' + (warn ? ' warn' : '')));
     const goto = entry.find((l) => l.startsWith('@goto:'));
     if (goto) setTimeout(() => { location.hash = goto.slice(6); }, 700);
+    const gotoPage = entry.find((l) => l.startsWith('@goto-page:'));
+    if (gotoPage) setTimeout(() => { location.href = gotoPage.slice(11); }, 1000);
   }
 
   termInput.addEventListener('keydown', (e) => {
@@ -1769,6 +1771,30 @@
   let fall = null, squash = 0;
   let grab = null, moved = 0, downAt = 0;
   let zzzTimer = 0, mood = 70;
+
+  /* 回访记忆（仅存本机 localStorage） */
+  let memory = { v: 0, fed: 0, pets: 0, m: 70 };
+  try { memory = Object.assign(memory, JSON.parse(localStorage.getItem('cat-memory') || '{}')); } catch (e) {}
+  function saveMemory() {
+    memory.m = Math.round(mood);
+    try { localStorage.setItem('cat-memory', JSON.stringify(memory)); } catch (e) {}
+  }
+  try {
+    if (!sessionStorage.getItem('cat-session')) {
+      sessionStorage.setItem('cat-session', '1');
+      memory.v += 1;
+      saveMemory();
+    }
+  } catch (e) {}
+  mood = Math.max(40, Math.min(100, memory.m || 70));
+
+  function greetLine() {
+    if (memory.v === 2) return '你又来了。我记得你。';
+    if (memory.fed >= 5) return '老朋友。今天有鱼吗？';
+    if (memory.v >= 6) return '第 ' + memory.v + ' 次见面。这里都快成你家了。';
+    if (memory.v >= 3) return '第 ' + memory.v + ' 次见面。喵。';
+    return '';
+  }
 
   /* 视线角度 → head360 帧（0=看左, 84=看上, 144=看前, 168=看右） */
   function angleToFrame(theta) {
@@ -1906,6 +1932,8 @@
     if (wasClick) {
       talk();
       mood = Math.min(100, mood + 4);
+      memory.pets += 1;
+      saveMemory();
       if (state === 'drag') state = 'idle';
     } else if (state === 'drag') {
       fall = { vy: 0 };
@@ -2011,7 +2039,8 @@
       debugEl.textContent = 'state: ' + state + (hop ? '+hop' : '') +
         '\nmood:  ' + Math.round(mood) +
         '\nhead:  ' + Math.round(headPos) + ' -> ' + Math.round(headTarget) +
-        '\nnext:  ' + (wander ? 'wandering' : Math.max(0, hopWait / 1000).toFixed(1) + 's');
+        '\nnext:  ' + (wander ? 'wandering' : Math.max(0, hopWait / 1000).toFixed(1) + 's') +
+        '\nmem:   v' + memory.v + ' fish' + memory.fed + ' pet' + memory.pets;
     }
 
     /* 绘制（跳跃时用全身帧，注视/拖拽用转头帧） */
@@ -2083,7 +2112,9 @@
       setTimeout(() => {
         squash = 0.2;
         mood = Math.min(100, mood + 10);
-        talk('谢谢投喂，记在主人账上。');
+        memory.fed += 1;
+        saveMemory();
+        talk(memory.fed >= 5 ? '第 ' + memory.fed + ' 条鱼了。你是懂猫的。' : '谢谢投喂，记在主人账上。');
       }, 700);
     },
     debug: toggleDebug,
@@ -2095,6 +2126,12 @@
 
   if (!reduce) {
     raf = requestAnimationFrame(loop);
+  }
+
+  /* 回访问候：老朋友进门打个招呼 */
+  const greeting = greetLine();
+  if (greeting && memory.v >= 2) {
+    setTimeout(() => { if (state !== 'sleep') talk(greeting); }, 2600);
   }
 })();
 </script>
