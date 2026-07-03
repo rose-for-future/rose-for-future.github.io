@@ -10,7 +10,11 @@
 <meta property="og:url" content="https://rose-for-future.github.io/">
 <meta property="og:title" content="lixudong · AI 产品经理工作台">
 <meta property="og:description" content="把产品工作沉淀成可复用系统。AI 产品方法、天天在用的 Skills，与可玩的作品。">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://rose-for-future.github.io/assets/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rose-for-future.github.io/assets/og-card.jpg">
 <style>
   :root {
     --bg: #f6faf8;
@@ -465,6 +469,47 @@
     color: #9a640d;
     text-shadow: 0 0 18px rgba(216, 148, 34, 0.24);
   }
+
+  .term-log {
+    display: grid;
+    gap: 4px;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+
+  .term-log .cmd { color: var(--faint); }
+  .term-log .out { color: var(--cyan); }
+  .term-log .out.warn { color: var(--gold); }
+
+  .term-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .term-ps { color: var(--gold); font-weight: 700; }
+
+  #term-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    caret-color: var(--cyan);
+  }
+
+  #term-input::placeholder { color: var(--faint); opacity: 0.8; }
 
   section {
     padding: 74px 0;
@@ -969,6 +1014,147 @@
   footer a { color: var(--muted); }
   footer a:hover { color: var(--gold); }
 
+  /* ===== 深色模式 ===== */
+  .theme-toggle {
+    width: 34px;
+    height: 34px;
+    margin-left: 6px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .theme-toggle:hover {
+    color: var(--text);
+    border-color: rgba(13, 169, 153, 0.42);
+    background: rgba(13, 169, 153, 0.08);
+  }
+
+  html[data-theme="dark"] {
+    --bg: #0c1512;
+    --bg-2: #101c17;
+    --panel: rgba(22, 35, 30, 0.72);
+    --panel-strong: #15211c;
+    --line: rgba(232, 241, 237, 0.09);
+    --line-strong: rgba(232, 241, 237, 0.17);
+    --text: #e8f1ed;
+    --muted: #9db3ac;
+    --faint: #6d817a;
+    --gold: #e6a93c;
+    --cyan: #2fc4b2;
+    --blue: #7aa2ff;
+    --red: #ef8078;
+  }
+
+  html[data-theme="dark"] body {
+    background:
+      radial-gradient(circle at 12% 10%, rgba(47, 196, 178, 0.1), transparent 30%),
+      radial-gradient(circle at 76% 0%, rgba(230, 169, 60, 0.08), transparent 28%),
+      radial-gradient(circle at 52% 55%, rgba(122, 162, 255, 0.05), transparent 34%),
+      linear-gradient(145deg, var(--bg), var(--bg-2) 58%, #0a120f);
+  }
+
+  html[data-theme="dark"] body::before {
+    background:
+      linear-gradient(120deg, transparent 0 44%, rgba(47, 196, 178, 0.08) 50%, transparent 56%),
+      repeating-linear-gradient(100deg, transparent 0 34px, rgba(47, 196, 178, 0.04) 35px, transparent 36px);
+    opacity: 0.4;
+  }
+
+  html[data-theme="dark"] body::after {
+    background:
+      radial-gradient(ellipse at 22% 22%, rgba(47, 196, 178, 0.05), transparent 38%),
+      radial-gradient(ellipse at 85% 42%, rgba(230, 169, 60, 0.05), transparent 32%),
+      linear-gradient(to bottom, transparent, rgba(8, 14, 12, 0.5));
+  }
+
+  html[data-theme="dark"] header {
+    background: rgba(12, 21, 18, 0.76);
+  }
+
+  html[data-theme="dark"] .button {
+    background: rgba(22, 35, 30, 0.72);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  }
+
+  html[data-theme="dark"] .button.primary {
+    border-color: rgba(230, 169, 60, 0.4);
+    background: rgba(230, 169, 60, 0.13);
+    color: #eec27a;
+  }
+
+  html[data-theme="dark"] .button:hover {
+    background: rgba(47, 196, 178, 0.12);
+  }
+
+  html[data-theme="dark"] .terminal {
+    background:
+      linear-gradient(180deg, rgba(26, 40, 35, 0.95), rgba(18, 29, 25, 0.72) 58%),
+      rgba(18, 29, 25, 0.72);
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5);
+  }
+
+  html[data-theme="dark"] .task {
+    background: rgba(232, 241, 237, 0.04);
+  }
+
+  html[data-theme="dark"] .task:hover,
+  html[data-theme="dark"] .task.is-active {
+    background: rgba(47, 196, 178, 0.09);
+    box-shadow: 0 0 0 1px rgba(47, 196, 178, 0.1), 0 14px 44px rgba(0, 0, 0, 0.4);
+  }
+
+  html[data-theme="dark"] .task.is-active .status {
+    color: #eec27a;
+  }
+
+  html[data-theme="dark"] .method-grid {
+    background: rgba(232, 241, 237, 0.03);
+    box-shadow: 0 22px 70px rgba(0, 0, 0, 0.4);
+  }
+
+  html[data-theme="dark"] .method-grid .method:hover {
+    background: rgba(47, 196, 178, 0.08);
+  }
+
+  html[data-theme="dark"] .tag {
+    color: #a9c3bb;
+    background: rgba(232, 241, 237, 0.05);
+  }
+
+  html[data-theme="dark"] .lab-card,
+  html[data-theme="dark"] .skill-card {
+    background: linear-gradient(160deg, rgba(26, 40, 35, 0.88), rgba(16, 27, 23, 0.78));
+    box-shadow: 0 24px 76px rgba(0, 0, 0, 0.42);
+  }
+
+  html[data-theme="dark"] .lab-card::before {
+    background: linear-gradient(120deg, transparent, rgba(232, 241, 237, 0.08), transparent);
+  }
+
+  html[data-theme="dark"] .badge {
+    background: rgba(47, 196, 178, 0.1);
+  }
+
+  html[data-theme="dark"] .about-card {
+    border-color: rgba(230, 169, 60, 0.26);
+    background:
+      linear-gradient(135deg, rgba(230, 169, 60, 0.1), transparent 40%),
+      linear-gradient(160deg, rgba(26, 40, 35, 0.9), rgba(16, 27, 23, 0.8));
+    box-shadow: 0 24px 76px rgba(0, 0, 0, 0.42);
+  }
+
+  html[data-theme="dark"] .pet-figure img {
+    filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.5));
+  }
+
   @media (max-width: 900px) {
     .hero {
       min-height: auto;
@@ -1059,6 +1245,16 @@
     }
   }
 </style>
+<script>
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (t !== 'dark' && t !== 'light') {
+      t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
 </head>
 <body>
 
@@ -1074,6 +1270,7 @@
       <a href="#works">作品</a>
       <a href="#skills">Skills</a>
       <a href="#about">关于</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深色/浅色模式">☾</button>
     </nav>
   </div>
 </header>
@@ -1127,6 +1324,11 @@
               </div>
               <span class="status">STORE</span>
             </div>
+          </div>
+          <div class="term-log" id="term-log" aria-live="polite"></div>
+          <div class="term-input-row">
+            <span class="term-ps">$</span>
+            <input id="term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="输入 help 试试" aria-label="终端命令输入" maxlength="40">
           </div>
         </div>
       </aside>
@@ -1349,6 +1551,61 @@
       window.setInterval(syncTaskState, 2200);
     }
   }
+
+  const termLog = document.getElementById('term-log');
+  const termInput = document.getElementById('term-input');
+  const COMMANDS = {
+    help: ['可用命令：works · skills · motto · status · contact · sudo · clear'],
+    works: ['3 个作品：喵秘书 / 体素世界 / 贾维斯042 → 带你去看', '@goto:#works'],
+    skills: ['5 个 skill 常驻运行 → 带你去看', '@goto:#skills'],
+    motto: ['「做难而正确的事」'],
+    status: ['5 个 Skill 常驻运行 · 3 个作品 · 1 个语音分身待部署'],
+    contact: ['github.com/rose-for-future · l17805804972@163.com', '@goto:#about'],
+    about: ['@alias:contact'],
+    sudo: ['权限不足：难而正确的事，只能自己做。', '@warn'],
+    '042': ['贾维斯042号还在部署队列里，先看看别的？'],
+    jarvis: ['@alias:042'],
+    hi: ['你好，欢迎来到我的工作台。'],
+    hello: ['@alias:hi'],
+  };
+
+  function termPrint(text, cls) {
+    const line = document.createElement('div');
+    line.className = cls;
+    line.textContent = text;
+    termLog.appendChild(line);
+    while (termLog.children.length > 6) termLog.removeChild(termLog.firstChild);
+  }
+
+  function runCommand(raw) {
+    const cmd = raw.trim().toLowerCase();
+    if (!cmd) return;
+    termPrint('$ ' + raw.trim(), 'cmd');
+    if (cmd === 'clear') { termLog.innerHTML = ''; return; }
+    let entry = COMMANDS[cmd.split(/\s+/)[0]];
+    if (entry && entry[0].startsWith('@alias:')) entry = COMMANDS[entry[0].slice(7)];
+    if (!entry) { termPrint('command not found: ' + cmd + '（试试 help）', 'out warn'); return; }
+    const warn = entry.includes('@warn');
+    entry.filter((l) => !l.startsWith('@')).forEach((l) => termPrint(l, 'out' + (warn ? ' warn' : '')));
+    const goto = entry.find((l) => l.startsWith('@goto:'));
+    if (goto) setTimeout(() => { location.hash = goto.slice(6); }, 700);
+  }
+
+  termInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { runCommand(termInput.value); termInput.value = ''; }
+  });
+
+  const themeBtn = document.getElementById('theme-toggle');
+  const syncThemeBtn = () => {
+    themeBtn.textContent = document.documentElement.dataset.theme === 'dark' ? '☀' : '☾';
+  };
+  syncThemeBtn();
+  themeBtn.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    syncThemeBtn();
+  });
 
   document.querySelectorAll('.star-badge[data-stars]').forEach((el) => {
     fetch('https://api.github.com/repos/' + el.dataset.stars)
