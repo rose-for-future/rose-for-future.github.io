@@ -1109,6 +1109,67 @@
   footer a { color: var(--muted); }
   footer a:hover { color: var(--gold); }
 
+  /* ===== 主题切换圆形扩散（View Transitions） ===== */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) { z-index: 1; }
+  ::view-transition-new(root) { z-index: 2; }
+
+  /* ===== 键盘快捷键面板 ===== */
+  #kbd-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(10, 18, 15, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  #kbd-panel .kbd-card {
+    min-width: 280px;
+    padding: 22px 26px;
+    border: 1px solid var(--line-strong);
+    border-radius: 16px;
+    background: var(--panel-strong);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 2.1;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
+  }
+
+  #kbd-panel h3 {
+    margin-bottom: 10px;
+    color: var(--text);
+    font-size: 14px;
+    letter-spacing: 0.06em;
+  }
+
+  #kbd-panel kbd {
+    display: inline-block;
+    min-width: 22px;
+    margin-right: 3px;
+    padding: 0 7px;
+    border: 1px solid var(--line-strong);
+    border-bottom-width: 2px;
+    border-radius: 6px;
+    background: rgba(127, 127, 127, 0.08);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  #kbd-panel .kbd-k { display: inline-block; min-width: 96px; }
+
   /* ===== 深色模式 ===== */
   .theme-toggle {
     width: 34px;
@@ -1711,9 +1772,68 @@
   syncThemeBtn();
   themeBtn.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('theme', next); } catch (e) {}
-    syncThemeBtn();
+    const apply = () => {
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      syncThemeBtn();
+    };
+    if (!document.startViewTransition || reduceMotion) { apply(); return; }
+    /* 暗色从按钮位置圆形扩散开 */
+    const r = themeBtn.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const radius = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
+    const vt = document.startViewTransition(apply);
+    vt.ready.then(() => {
+      document.documentElement.animate(
+        { clipPath: ['circle(0px at ' + cx + 'px ' + cy + 'px)', 'circle(' + radius + 'px at ' + cx + 'px ' + cy + 'px)'] },
+        { duration: 550, easing: 'cubic-bezier(0.3, 0, 0.4, 1)', pseudoElement: '::view-transition-new(root)' }
+      );
+    }).catch(() => {});
+  });
+
+  /* ===== 键盘导航 ===== */
+  const KBD_TARGETS = { m: '#methods', w: '#works', s: '#skills', a: '#about' };
+  let chordAt = 0;
+  let kbdPanel = null;
+
+  function toggleKbdPanel() {
+    if (kbdPanel) { kbdPanel.remove(); kbdPanel = null; return; }
+    kbdPanel = document.createElement('div');
+    kbdPanel.id = 'kbd-panel';
+    const rows = [
+      ['<kbd>j</kbd><kbd>k</kbd>', '向下 / 向上滚动'],
+      ['<kbd>g</kbd><kbd>h</kbd>', '回到顶部'],
+      ['<kbd>g</kbd><kbd>w</kbd>', '作品'],
+      ['<kbd>g</kbd><kbd>s</kbd>', 'Skills'],
+      ['<kbd>g</kbd><kbd>m</kbd>', '方法库'],
+      ['<kbd>g</kbd><kbd>a</kbd>', '关于'],
+      ['<kbd>t</kbd>', '切换深浅主题'],
+      ['<kbd>?</kbd>', '开关本面板'],
+    ];
+    kbdPanel.innerHTML = '<div class="kbd-card"><h3>键盘快捷键</h3>' +
+      rows.map((r) => '<div><span class="kbd-k">' + r[0] + '</span>' + r[1] + '</div>').join('') +
+      '</div>';
+    kbdPanel.addEventListener('click', (e) => { if (e.target === kbdPanel) toggleKbdPanel(); });
+    document.body.appendChild(kbdPanel);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (k === '?') { e.preventDefault(); toggleKbdPanel(); return; }
+    if (k === 'Escape' && kbdPanel) { toggleKbdPanel(); return; }
+    if (k === 'j') { window.scrollBy({ top: innerHeight * 0.7, behavior: 'smooth' }); return; }
+    if (k === 'k') { window.scrollBy({ top: -innerHeight * 0.7, behavior: 'smooth' }); return; }
+    if (k === 't') { themeBtn.click(); return; }
+    if (k === 'g') { chordAt = performance.now(); return; }
+    if (chordAt && performance.now() - chordAt < 900) {
+      chordAt = 0;
+      if (k === 'h') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+      const target = KBD_TARGETS[k] && document.querySelector(KBD_TARGETS[k]);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
   });
 
   document.querySelectorAll('.star-badge[data-stars]').forEach((el) => {
